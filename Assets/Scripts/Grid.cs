@@ -2,12 +2,30 @@
 using System;
 using System.Collections;
 
-public class Grid{
+public class Point
+{
+	public float x;
+	public float y;
 
+	public Point(float x, float y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+
+	override public string ToString()
+	{
+		return "x:" + this.x + ", y:" + this.y;
+	}
+}
+
+public class Grid
+{
 	public int width;
 	public int height;
 	private ArrayList listY;
 	private ArrayList listX;
+
 
 	public Grid(int width, int height)
 	{
@@ -41,11 +59,30 @@ public class Grid{
 		{
 			for( int x = 0; x < width; ++x )
 			{
-				var value = Get( x, y );
-				callback( x, y, value );
+				var item = Get( x, y );
+				callback( x, y, item );
 			}
 		}
 	}
+
+	public Point GetPositionOfObject(object value)
+	{
+		Debug.Log( value );
+
+		for( int y = 0; y < height; ++y )
+		{
+			for( int x = 0; x < width; ++x )
+			{
+				var item = Get( x, y );
+
+				if( value == item )
+					return new Point( x, y );
+			}
+		}
+
+		return null;
+	}
+
 
 	/*
 	 * Private interface.

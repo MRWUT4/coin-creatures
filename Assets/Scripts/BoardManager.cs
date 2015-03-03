@@ -102,9 +102,10 @@ public class BoardManager : MonoBehaviour
 			interactionObject.OnMouseDown = coinOnMouseDownHandler;
 	}
 
-	private void coinOnMouseDownHandler(InteractionObject interactionObject)
+	private void coinOnMouseDownHandler(GameObject gameObject)
 	{
-		var position = interactionObject.transform.position;
-		Debug.Log( position.x );
+		Debug.Log( coinGrid.GetPositionOfObject( gameObject ) );
+
+		//Debug.Log( (InteractionObject) coinGrid.Get( 0, 0 ) == gameObject );
 	}
 }

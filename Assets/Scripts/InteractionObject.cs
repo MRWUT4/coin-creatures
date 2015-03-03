@@ -5,8 +5,8 @@ using System.Collections;
 
 public class InteractionObject : MonoBehaviour 
 {
-	public Action< InteractionObject > OnMouseDown;
-	public Action< InteractionObject > OnMouseUp;
+	public Action< GameObject > OnMouseDown;
+	public Action< GameObject > OnMouseUp;
 
 	void Start (){}
 
@@ -24,14 +24,14 @@ public class InteractionObject : MonoBehaviour
 		{
 			if( Input.GetMouseButtonDown( 0 ) )
 			{
-				if( OnMouseDown != null );
-					OnMouseDown( this );
+				if( OnMouseDown != null )
+					OnMouseDown( gameObject );
 			}
 			else
 			if( Input.GetMouseButtonUp( 0 ) )
 			{
 				if( OnMouseUp != null )
-					OnMouseUp( this );	
+					OnMouseUp( gameObject );	
 			}
 		}
 	}
