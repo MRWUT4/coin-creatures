@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using System;
+using UnityEngine;
 
 public class BoardManager : MonoBehaviour 
 {	
@@ -14,7 +15,8 @@ public class BoardManager : MonoBehaviour
 	private Grid monsterGrid;
 	private Grid coinGrid;
 
-	/*
+
+	/**
 	 * Public interface.
 	 */
 
@@ -30,7 +32,7 @@ public class BoardManager : MonoBehaviour
 	}
 
 
-	/*
+	/**
 	 * Getter / Setter
 	 */
 
@@ -41,7 +43,7 @@ public class BoardManager : MonoBehaviour
 
 	public GameObject GetRandomMonster()
 	{
-		return MonsterList[ Random.Range( 0, MonsterList.Length ) ];
+		return MonsterList[ UnityEngine.Random.Range( 0, MonsterList.Length ) ];
 	}
 
 	public GameObject GetRandomMonsterInstance(int x, int y)
@@ -63,7 +65,7 @@ public class BoardManager : MonoBehaviour
 	}
 
 
-	/*
+	/**
 	 * Private interface. 
 	 */
 
@@ -94,17 +96,25 @@ public class BoardManager : MonoBehaviour
 	private void setupCoinGridValues(int x, int y, object value)
 	{
 		var coin = GetCoInstance( x, y );
+
 		coinGrid.Set( x, y, coin );
 
 		var interactionObject = ( InteractionObject ) coin.GetComponent< InteractionObject >();
+		interactionObject.OnMouseDown += coinOnMouseDownHandler;
+		interactionObject.OnMouseOver += coinOnMouseDownHandler;
+//		var messenger = interactionObject.Messenger;
 
-		if( interactionObject )
-			interactionObject.OnMouseDown = coinOnMouseDownHandler;
+//		messenger.addEventListener( "complete", null );
+//
+//		if( interactionObject )
+//			interactionObject.OnMouseDown = coinOnMouseDownHandler;
 	}
 
-	private void coinOnMouseDownHandler(GameObject gameObject)
+	private void coinOnMouseDownHandler(MonoBehaviour interactionObject)
 	{
-		Debug.Log( coinGrid.GetPositionOfObject( gameObject ) );
+		Debug.Log( "coinOnMouseDownHandler", interactionObject );
+		//Debug.Log( interactionObject );
+		//Debug.Log( coinGrid.GetPositionOfObject( gameObject ) );
 
 		//Debug.Log( (InteractionObject) coinGrid.Get( 0, 0 ) == gameObject );
 	}

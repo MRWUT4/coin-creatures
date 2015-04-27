@@ -67,8 +67,6 @@ public class Grid
 
 	public Point GetPositionOfObject(object value)
 	{
-		Debug.Log( value );
-
 		for( int y = 0; y < height; ++y )
 		{
 			for( int x = 0; x < width; ++x )
