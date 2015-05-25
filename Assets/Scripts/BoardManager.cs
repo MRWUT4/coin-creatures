@@ -1,9 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System;
 using UnityEngine;
 
 public class BoardManager : MonoBehaviour 
 {	
+	public static string ID_STATE_COIN_SELECT = "coinSelect";
+
 	public int Columns = 6;
 	public int Rows = 8;
 	public int Distance = 1;
@@ -14,6 +16,7 @@ public class BoardManager : MonoBehaviour
 	private GameObject holder;
 	private Grid monsterGrid;
 	private Grid coinGrid;
+	private StateMachine stateMachine;
 
 
 	/**
@@ -23,6 +26,7 @@ public class BoardManager : MonoBehaviour
 	void Start () 
 	{
 		initVariables();
+		iniStateMachine();
 		initGridStack();
 	}
 
@@ -75,6 +79,32 @@ public class BoardManager : MonoBehaviour
 		holder.transform.parent = gameObject.transform;
 	}
 	
+
+	/** StateMachine functions. */
+	private void iniStateMachine()
+	{
+		Proxy proxy = new Proxy();
+
+		stateMachine = new StateMachine();
+		stateMachine.OnExit += stateMachineOnExitHandler;
+		stateMachine.OnExit += stateMachineOnEnterHandler;
+
+		stateMachine.AddState( ID_STATE_COIN_SELECT, new CoinSelectState( proxy ) );
+		stateMachine.SetState( ID_STATE_COIN_SELECT );
+	}
+
+	private void stateMachineOnExitHandler(State state)
+	{
+		Debug.Log( state.id );
+	}
+
+	private void stateMachineOnEnterHandler(State state)
+	{
+		Debug.Log( state.id );
+	}
+
+
+	/** GridStack functions. */
 	private void initGridStack()
 	{
 		var gridStack = new GridStack( Columns, Rows );
@@ -101,7 +131,7 @@ public class BoardManager : MonoBehaviour
 
 		var interactionObject = ( InteractionObject ) coin.GetComponent< InteractionObject >();
 		interactionObject.OnMouseDown += coinOnMouseDownHandler;
-		interactionObject.OnMouseOver += coinOnMouseDownHandler;
+//		interactionObject.OnMouseOver += coinOnMouseDownHandler;
 //		var messenger = interactionObject.Messenger;
 
 //		messenger.addEventListener( "complete", null );

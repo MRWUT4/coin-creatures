@@ -8,15 +8,15 @@ using UnityEngine;
  * Event delegates.
  */
 
-public delegate void OnMouseDownEventHandler( MonoBehaviour sender );
-public delegate void OnMouseUpEventHandler( MonoBehaviour sender );
-public delegate void OnMouseOverEventHandler( MonoBehaviour sender );
-public delegate void OnMouseOutEventHandler( MonoBehaviour sender );
+public delegate void OnMouseUpEventHandler( MonoBehaviour monoBehaviour );
+public delegate void OnMouseDownEventHandler( MonoBehaviour monoBehaviour );
+public delegate void OnMouseOverEventHandler( MonoBehaviour monoBehaviour );
+public delegate void OnMouseOutEventHandler( MonoBehaviour monoBehaviour );
 
 public class InteractionObject : MonoBehaviour 
 {
 	/**
-	 * Event handler.
+	 * Event interface.
 	 */
 
 	public event OnMouseUpEventHandler OnMouseUp;
