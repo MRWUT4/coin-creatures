@@ -28,9 +28,6 @@ public class BoardManager : MonoBehaviour
 		initVariables();
 		iniStateMachine();
 		initGridStack();
-
-
-		Debug.Log( Back.easeIn( 0, 0, 0, 0, float.NaN ) );
 	}
 
 	void Update () 
