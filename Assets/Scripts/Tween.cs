@@ -7,12 +7,13 @@ public class Tween
 {
 	public static string[] IGNORED_PROPERTIES = { "ease", "id", "delay", "fps", "ignorePropertys" };
 
-
 	private object instance;
 	private double duration;
 	private object setup;
 
 	private int fps;
+	private int frame = 0;
+	private double delay;
 	private String ease;
 	private MethodInfo easeMethodInfo;	
 	private object[] easeValueList = new object[]{ 0, 0, 0, 0 };
@@ -25,10 +26,13 @@ public class Tween
 		this.setup = setup;
 		this.fps = (int)Math.Floor( 1 / Time.fixedDeltaTime );
 
+		this.frame = 0;
+		this.delay = (double)GetDynamicValue( setup, "delay" );		
 		this.ease = (string)GetDynamicValue( setup, "ease" );
 		this.easeMethodInfo = GetMethodInfo( this.ease );
 
-		Debug.Log( GetEase( 1, 1, 1, 1 ) );
+		// Debug.Log( this.delay );
+		// Debug.Log( GetEase( 1, 1, 1, 1 ) );
 	}
 
 
@@ -66,8 +70,59 @@ public class Tween
 
 
 	/**
-	 * Public interface.
+	 * Getter / Setter.
 	 */
+
+	public bool GetIsFirstFrame()
+	{
+		return frame == 0;
+	}
+
+	public bool GetComplete()
+	{
+		return frame >= GetTotalFrames();
+	}
+
+	public bool GetStart()
+	{
+		return frame >= GetDelayFrames();
+	}
+
+	public int GetTotalFrames()
+	{
+		return GetDurationFrames() + GetDelayFrames();
+	}
+
+	public int GetDurationFrames()
+	{
+		return GetSecondsToFrames( duration );
+	}
+
+	public int GetDelayFrames()
+	{
+		return GetSecondsToFrames( delay );
+	}
+
+	public double GetTimescale()
+	{
+		return duration / GetDurationFrames();
+	}
+
+	public int GetSecondsToFrames(double seconds)
+	{
+		return (int)Math.Ceiling( this.fps * seconds );
+	}
+
+	public bool GetIsIgnoredProperty(string property)
+	{
+		for( int i = 0; i < IGNORED_PROPERTIES.Length; ++i )
+		{
+			if( property == IGNORED_PROPERTIES[ i ] )
+				return true;
+		}
+
+		return false;
+	}
 
 	public double GetEase(double t, double b, double c, double d)
 	{
@@ -77,5 +132,16 @@ public class Tween
 		easeValueList[ 3 ] = d;
 
 		return (double)this.easeMethodInfo.Invoke( this.easeMethodInfo.GetType(), easeValueList );
+	}
+
+
+	/**
+	 * Public interface.
+	 */
+
+	private void reset()
+	{
+		frame = 0;
+
 	}
 }
