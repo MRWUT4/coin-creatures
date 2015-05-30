@@ -17,7 +17,9 @@ public class Tween
 	private String ease;
 	private MethodInfo easeMethodInfo;	
 	private object[] easeValueList = new object[]{ 0, 0, 0, 0 };
-
+	private bool hasStarted;
+	private bool hasCompleted;
+	private object beginValues;
 
 	public Tween(object instance, double duration, object setup)
 	{
@@ -27,12 +29,12 @@ public class Tween
 		this.fps = (int)Math.Floor( 1 / Time.fixedDeltaTime );
 
 		this.frame = 0;
-		this.delay = (double)GetDynamicValue( setup, "delay" );		
+		this.delay = (double)Convert.ToDouble( GetDynamicValue( setup, "delay" ) );
 		this.ease = (string)GetDynamicValue( setup, "ease" );
 		this.easeMethodInfo = GetMethodInfo( this.ease );
 
-		// Debug.Log( this.delay );
-		// Debug.Log( GetEase( 1, 1, 1, 1 ) );
+		Debug.Log( this.delay );
+		Debug.Log( GetEase( 1, 1, 1, 1 ) );
 	}
 
 
@@ -42,11 +44,15 @@ public class Tween
 
 	public static object GetDynamicValue(object item, string property)
 	{
-		var itemType = item.GetType();
-		var itemProperty = itemType.GetProperty( property );
-		var itemValue = itemProperty.GetValue( item, null );
+		object value = null;
 
-		return itemValue;
+		Type itemType = item.GetType();
+		PropertyInfo itemProperty = itemType.GetProperty( property );
+
+		if( itemProperty != null )
+			value = itemProperty.GetValue( item, null );
+
+		return value;
 	}
 
 	public static Type GetType(String name)
@@ -134,14 +140,109 @@ public class Tween
 		return (double)this.easeMethodInfo.Invoke( this.easeMethodInfo.GetType(), easeValueList );
 	}
 
+	// public object GetObjectAtFrame(int frame)
+	// {
+	// 	object item = null;
+
+	// 	if( GetStart() && BeginValues )
+	// 	{
+	// 		item = {};
+
+	// 		for( var property in this.setup )
+	// 		{
+	// 			var durationFrame = frame - this.getDelayFrames();
+				
+	// 			if( !this.getIsIgnoredProperty( property ) )
+	// 			{
+	// 		    	var value = this.setup[ property ];
+
+	// 		    	item[ property ] = {};
+
+	// 				var t = durationFrame * this.getTimescale();
+	// 		    	var b = this.beginValues[ property ];
+	// 			    var c = value - b;
+
+	// 			    if( durationFrame < this.getDurationFrames() - 1 )
+	// 		    		item[ property ] = this.ease( t, b, c, this.duration );
+	// 		    	else
+	// 		    		item[ property ] = value;
+	// 			}
+	// 		}
+	// 	}
+
+	// 	return object;
+	// };
+
 
 	/**
 	 * Public interface.
 	 */
 
-	private void reset()
+	public void Reset()
 	{
 		frame = 0;
+		hasStarted = false;
+		hasCompleted = false;
+	}
+
+	public void Kill()
+	{
+		frame = this.GetTotalFrames() - 1;
+		updateCurrentFrameProperties();
+	}
+
+	public void Update()
+	{
+		// updateStart();
+		updateCurrentFrameProperties();
+		updateEnd();
+	}
+
+
+	/**
+	 * Private interface.
+	 */
+
+	private void initBeginValues()
+	{
+		beginValues = new {};
+
+		Type type = setup.GetType();
+
+		foreach( PropertyInfo propertyInfo in type.GetProperties() )
+		{
+		// 	// Debug.Log( propertyInfo );
+		// 	// if( propertyInfo.CanRead )
+		// 	// {
+		// 	// 	object firstValue = propertyInfo.GetValue(first, null);
+		// 	// 	object secondValue = propertyInfo.GetValue(second, null);
+	
+		// 	// 	if( !object.Equals(firstValue, secondValue) )
+		// 	// 	{
+		// 	// 		return false;
+		// 	// 	}
+		// 	// }
+		}
+
+	   //  for( var property in this.setup )
+	   //  {
+	   //  	if( !this.getIsIgnoredProperty( property ) )
+				// beginValues[ property ] = this.object[ property ];
+	   //  }
+	}
+
+	// private void updateStart()
+	// {
+
+	// }
+
+	private void updateCurrentFrameProperties()
+	{
+		
+	}
+
+	private void updateEnd()
+	{
 
 	}
 }

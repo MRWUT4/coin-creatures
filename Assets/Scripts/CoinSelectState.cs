@@ -51,10 +51,8 @@ public class CoinSelectState : State
 
 	private void initVariables()
 	{
-		var setup = new 
+		object setup = new 
 		{ 
-			test1 = "foo", 
-			test2 = "bar",
 			ease = "Back.EaseIn"
 		};
 
