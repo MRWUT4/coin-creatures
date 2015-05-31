@@ -1,22 +1,16 @@
 using UnityEngine;
+using System;
+using System.Reflection;
 
 public class CoinSelectState : State
 {
 	private Proxy proxy;
 
+	public double x = 10;
+
 	public CoinSelectState(Proxy proxy)
 	{
 		this.proxy = proxy;
-	}
-
-
-	private double _foo;
-	
-	public double foo
-	{
-		set { this._foo = value; }
-		
-		get { return this._foo; }
 	}
 
 
@@ -58,9 +52,10 @@ public class CoinSelectState : State
 		};
 
 
-		//Debug.Log( value );
+		// Debug.Log( foo.GetType() );
+		// Debug.Log( foo.GetType().GetProperty( "bar" ) );
 
-		//Debug.Log( );
+		// Debug.Log( Tween.GetDynamicDouble( this, "x" ) );
 
 		//Debug.Log( setup.GetValue( "test1" ) );
 
@@ -69,4 +64,18 @@ public class CoinSelectState : State
 
 		//var item = new { test1 = "val", test2 = "val2" };
 	}
+}
+
+public class Foo
+{
+    public Int32 bar
+    {
+        get
+        {
+            return 0;
+        }
+        set
+        {
+        }
+    }
 }

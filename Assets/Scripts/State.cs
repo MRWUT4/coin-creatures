@@ -1,11 +1,8 @@
 public abstract class State
 {
-
 	public string id;
 	public object setup;
-
 	
-
 
 	/**
 	 * Constructor.

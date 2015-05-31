@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -22,6 +23,7 @@ public class Tween
 	private bool hasCompleted;
 	private Dictionary<string, double> beginValues;
 
+
 	public Tween(object instance, double duration, object setup)
 	{
 		this.instance = instance;
@@ -30,14 +32,12 @@ public class Tween
 		this.fps = (int)Math.Floor( 1 / Time.fixedDeltaTime );
 
 		this.frame = 0;
-		this.delay = (double)Convert.ToDouble( GetDynamicValue( setup, "delay" ) );
-		this.ease = (string)GetDynamicValue( setup, "ease" );
+		this.delay = (double)Convert.ToDouble( GetDynamicObject( setup, "delay" ) );
+		this.ease = (string)GetDynamicObject( setup, "ease" );
 		this.easeMethodInfo = GetMethodInfo( this.ease );
 
 		initBeginValues();
-
-		Debug.Log( this.delay );
-		Debug.Log( GetEase( 1, 1, 1, 1 ) );	
+		updateCurrentFrameProperties();
 	}
 
 
@@ -45,7 +45,18 @@ public class Tween
 	 * Static interface.
 	 */
 
-	public static object GetDynamicValue(object item, string property)
+	public static double GetDynamicDouble(object item, string property)
+	{
+		double value = double.NaN;
+
+		Type type = item.GetType();
+		FieldInfo fieldInfo = type.GetField( property );
+		value = Convert.ToDouble( fieldInfo.GetValue( item ) );
+
+		return value;
+	}
+
+	public static object GetDynamicObject(object item, string property)
 	{
 		object value = null;
 
@@ -143,38 +154,42 @@ public class Tween
 		return (double)this.easeMethodInfo.Invoke( this.easeMethodInfo.GetType(), easeValueList );
 	}
 
-	// public object GetObjectAtFrame(int frame)
-	// {
-	// 	object item = null;
+	public Dictionary<string, double> GetDictionaryAtFrame(int frame)
+	{
+		Dictionary<string, double> dictionary = null;
 
-	// 	if( GetStart() && BeginValues )
-	// 	{
-	// 		item = {};
+		if( GetStart() && beginValues != null )
+		{
+			dictionary = new Dictionary<string, double>();
 
-	// 		for( var property in this.setup )
-	// 		{
-	// 			var durationFrame = frame - this.getDelayFrames();
-				
-	// 			if( !this.getIsIgnoredProperty( property ) )
-	// 			{
-	// 		    	var value = this.setup[ property ];
+			Type type = setup.GetType();
+			
+			foreach( PropertyInfo propertyInfo in type.GetProperties() )
+			{
+				string property = propertyInfo.Name;
+			
+				int durationFrame = frame - GetDelayFrames();
 
-	// 		    	item[ property ] = {};
+				if( !GetIsIgnoredProperty( property ) )
+				{
+					double value = Convert.ToDouble( propertyInfo.GetValue( setup, null ) );
 
-	// 				var t = durationFrame * this.getTimescale();
-	// 		    	var b = this.beginValues[ property ];
-	// 			    var c = value - b;
+					dictionary[ property ] = double.NaN;
 
-	// 			    if( durationFrame < this.getDurationFrames() - 1 )
-	// 		    		item[ property ] = this.ease( t, b, c, this.duration );
-	// 		    	else
-	// 		    		item[ property ] = value;
-	// 			}
-	// 		}
-	// 	}
+					double t = durationFrame * GetTimescale();
+					double b = beginValues[ property ];
+					double c = value - b;
 
-	// 	return object;
-	// };
+					if( durationFrame < GetDurationFrames() - 1 )
+						dictionary[ property ] = GetEase( t, b, c, duration );
+					else
+						dictionary[ property ] = value;
+				}
+			}
+		}
+
+		return dictionary;
+	}
 
 
 	/**
@@ -214,21 +229,40 @@ public class Tween
 		foreach( PropertyInfo propertyInfo in type.GetProperties() )
 		{
 			string name = propertyInfo.Name;
-			object value = propertyInfo.GetValue( setup, null );
 
 			if( !GetIsIgnoredProperty( name ) )
+			{
+				object value = GetDynamicDouble( instance, name );
 				beginValues.Add( name, Convert.ToDouble( value ) );
+			}
 		}
 	}
 
-	// private void updateStart()
-	// {
-
-	// }
-
 	private void updateCurrentFrameProperties()
 	{
-		
+		Dictionary <string, double> dictionary = GetDictionaryAtFrame( frame );
+
+		if( dictionary != null )
+		{
+			for( int i = 0; i < dictionary.Count; ++i )
+			{
+				KeyValuePair<string, double> pair = dictionary.ElementAt( i );
+
+				Debug.Log( i );
+				Debug.Log( pair.Key );
+				Debug.Log( pair.Value );
+			}
+
+			// Type type = item.GetType();
+			
+			// foreach( PropertyInfo propertyInfo in type.GetProperties() )
+			// {
+			// 	string name = propertyInfo.Name;
+			// 	object value = propertyInfo.GetValue( item, null );
+			
+				
+			// }
+		}
 	}
 
 	private void updateEnd()
