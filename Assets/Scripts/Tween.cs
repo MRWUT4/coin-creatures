@@ -9,31 +9,31 @@ public class Tween
 {
 	public static string[] IGNORED_PROPERTIES = { "ease", "id", "delay", "fps", "ignorePropertys" };
 
-	private object instance;
-	private double duration;
-	private object setup;
+	public object Instance;
+	public float Duration;
+	public object Setup;
 
 	private int fps;
 	private int frame = 0;
-	private double delay;
+	private float delay;
 	private String ease;
 	private MethodInfo easeMethodInfo;	
 	private object[] easeValueList = new object[]{ 0, 0, 0, 0 };
 	private bool hasStarted;
 	private bool hasCompleted;
-	private Dictionary<string, double> beginValues;
+	private Dictionary<string, float> beginValues;
 
 
-	public Tween(object instance, double duration, object setup)
+	public Tween(object Instance, float Duration, object Setup)
 	{
-		this.instance = instance;
-		this.duration = duration;
-		this.setup = setup;
+		this.Instance = Instance;
+		this.Duration = Duration;
+		this.Setup = Setup;
 		this.fps = (int)Math.Floor( 1 / Time.fixedDeltaTime );
 
 		this.frame = 0;
-		this.delay = (double)Convert.ToDouble( GetDynamicObject( setup, "delay" ) );
-		this.ease = (string)GetDynamicObject( setup, "ease" );
+		this.delay = (float)Convert.ToSingle( GetObjectProperty( Setup, "delay" ) );
+		this.ease = (string)GetObjectProperty( Setup, "ease" );
 		this.easeMethodInfo = GetMethodInfo( this.ease );
 
 		initBeginValues();
@@ -41,30 +41,39 @@ public class Tween
 	}
 
 
+	public delegate void OnUpdateEventHandler( Tween tween );
+	public event OnUpdateEventHandler OnUpdate;
+	
+	protected virtual void InvokeUpdate() 
+	{
+		if( OnUpdate != null ) OnUpdate( this );
+	}
+
+
 	/**
 	 * Static interface.
 	 */
+ 	
+ 	public static void SetObjectDouble(object target, string property, float value)
+ 	{
+		FieldInfo fieldInfo = target.GetType().GetField( property );
+		
+		if( fieldInfo != null )
+			fieldInfo.SetValue( target, value );
+ 	}
 
-	public static double GetDynamicDouble(object item, string property)
+	public static float GetObjectDouble(object target, string property)
 	{
-		double value = double.NaN;
-
-		Type type = item.GetType();
-		FieldInfo fieldInfo = type.GetField( property );
-		value = Convert.ToDouble( fieldInfo.GetValue( item ) );
+		FieldInfo fieldInfo = target.GetType().GetField( property );
+		float value = fieldInfo != null ? Convert.ToSingle( fieldInfo.GetValue( target ) ) : float.NaN;
 
 		return value;
 	}
 
-	public static object GetDynamicObject(object item, string property)
+	public static object GetObjectProperty(object target, string property)
 	{
-		object value = null;
-
-		Type itemType = item.GetType();
-		PropertyInfo itemProperty = itemType.GetProperty( property );
-
-		if( itemProperty != null )
-			value = itemProperty.GetValue( item, null );
+		PropertyInfo propertyInfo = target.GetType().GetProperty( property );
+		object value = propertyInfo != null ? propertyInfo.GetValue( target, null ) : null;
 
 		return value;
 	}
@@ -115,7 +124,7 @@ public class Tween
 
 	public int GetDurationFrames()
 	{
-		return GetSecondsToFrames( duration );
+		return GetSecondsToFrames( Duration );
 	}
 
 	public int GetDelayFrames()
@@ -123,12 +132,12 @@ public class Tween
 		return GetSecondsToFrames( delay );
 	}
 
-	public double GetTimescale()
+	public float GetTimescale()
 	{
-		return duration / GetDurationFrames();
+		return Duration / GetDurationFrames();
 	}
 
-	public int GetSecondsToFrames(double seconds)
+	public int GetSecondsToFrames(float seconds)
 	{
 		return (int)Math.Ceiling( this.fps * seconds );
 	}
@@ -144,44 +153,46 @@ public class Tween
 		return false;
 	}
 
-	public double GetEase(double t, double b, double c, double d)
+	public float GetEase(float t, float b, float c, float d)
 	{
 		easeValueList[ 0 ] = t;
 		easeValueList[ 1 ] = b;
 		easeValueList[ 2 ] = c;
 		easeValueList[ 3 ] = d;
 
-		return (double)this.easeMethodInfo.Invoke( this.easeMethodInfo.GetType(), easeValueList );
+		Type type = easeMethodInfo.GetType();
+
+		return (float)this.easeMethodInfo.Invoke( type, easeValueList );
 	}
 
-	public Dictionary<string, double> GetDictionaryAtFrame(int frame)
+	public Dictionary<string, float> GetDictionaryAtFrame(int frame)
 	{
-		Dictionary<string, double> dictionary = null;
+		Dictionary<string, float> dictionary = null;
 
 		if( GetStart() && beginValues != null )
 		{
-			dictionary = new Dictionary<string, double>();
+			dictionary = new Dictionary<string, float>();
 
-			Type type = setup.GetType();
+			Type type = Setup.GetType();
 			
 			foreach( PropertyInfo propertyInfo in type.GetProperties() )
 			{
 				string property = propertyInfo.Name;
 			
-				int durationFrame = frame - GetDelayFrames();
+				int DurationFrame = frame - GetDelayFrames();
 
 				if( !GetIsIgnoredProperty( property ) )
 				{
-					double value = Convert.ToDouble( propertyInfo.GetValue( setup, null ) );
+					float value = Convert.ToSingle( propertyInfo.GetValue( Setup, null ) );
 
-					dictionary[ property ] = double.NaN;
+					dictionary[ property ] = float.NaN;
 
-					double t = durationFrame * GetTimescale();
-					double b = beginValues[ property ];
-					double c = value - b;
+					float t = DurationFrame * GetTimescale();
+					float b = beginValues[ property ];
+					float c = value - b;
 
-					if( durationFrame < GetDurationFrames() - 1 )
-						dictionary[ property ] = GetEase( t, b, c, duration );
+					if( DurationFrame < GetDurationFrames() - 1 )
+						dictionary[ property ] = GetEase( t, b, c, Duration );
 					else
 						dictionary[ property ] = value;
 				}
@@ -199,7 +210,6 @@ public class Tween
 	public void Reset()
 	{
 		frame = 0;
-		hasStarted = false;
 		hasCompleted = false;
 	}
 
@@ -211,9 +221,8 @@ public class Tween
 
 	public void Update()
 	{
-		// updateStart();
 		updateCurrentFrameProperties();
-		updateEnd();
+		InvokeUpdate();
 	}
 
 
@@ -223,8 +232,8 @@ public class Tween
 
 	private void initBeginValues()
 	{
-		beginValues = new Dictionary<string, double>();
-		Type type = setup.GetType();
+		beginValues = new Dictionary<string, float>();
+		Type type = Setup.GetType();
 
 		foreach( PropertyInfo propertyInfo in type.GetProperties() )
 		{
@@ -232,41 +241,25 @@ public class Tween
 
 			if( !GetIsIgnoredProperty( name ) )
 			{
-				object value = GetDynamicDouble( instance, name );
-				beginValues.Add( name, Convert.ToDouble( value ) );
+				object value = GetObjectDouble( Instance, name );
+				beginValues.Add( name, Convert.ToSingle( value ) );
 			}
 		}
 	}
 
 	private void updateCurrentFrameProperties()
 	{
-		Dictionary <string, double> dictionary = GetDictionaryAtFrame( frame );
+		Dictionary <string, float> dictionary = GetDictionaryAtFrame( frame );
 
 		if( dictionary != null )
 		{
 			for( int i = 0; i < dictionary.Count; ++i )
 			{
-				KeyValuePair<string, double> pair = dictionary.ElementAt( i );
-
-				Debug.Log( i );
-				Debug.Log( pair.Key );
-				Debug.Log( pair.Value );
+				KeyValuePair<string, float> pair = dictionary.ElementAt( i );
+				SetObjectDouble( Instance, pair.Key, pair.Value );
 			}
-
-			// Type type = item.GetType();
-			
-			// foreach( PropertyInfo propertyInfo in type.GetProperties() )
-			// {
-			// 	string name = propertyInfo.Name;
-			// 	object value = propertyInfo.GetValue( item, null );
-			
-				
-			// }
 		}
-	}
 
-	private void updateEnd()
-	{
-
+		frame++;
 	}
 }

@@ -26,13 +26,13 @@ public class BoardManager : MonoBehaviour
 	void Start () 
 	{
 		initVariables();
-		iniStateMachine();
 		initGridStack();
+		iniStateMachine();
 	}
 
 	void Update () 
 	{
-	
+		stateMachine.Update();
 	}
 
 
@@ -80,30 +80,6 @@ public class BoardManager : MonoBehaviour
 	}
 	
 
-	/** StateMachine functions. */
-	private void iniStateMachine()
-	{
-		Proxy proxy = new Proxy();
-
-		stateMachine = new StateMachine();
-		stateMachine.OnExit += stateMachineOnExitHandler;
-		stateMachine.OnExit += stateMachineOnEnterHandler;
-
-		stateMachine.AddState( ID_STATE_COIN_SELECT, new CoinSelectState( proxy ) );
-		stateMachine.SetState( ID_STATE_COIN_SELECT );
-	}
-
-	private void stateMachineOnExitHandler(State state)
-	{
-		Debug.Log( state.id );
-	}
-
-	private void stateMachineOnEnterHandler(State state)
-	{
-		Debug.Log( state.id );
-	}
-
-
 	/** GridStack functions. */
 	private void initGridStack()
 	{
@@ -131,21 +107,36 @@ public class BoardManager : MonoBehaviour
 
 		var interactionObject = ( InteractionObject ) coin.GetComponent< InteractionObject >();
 		interactionObject.OnMouseDown += coinOnMouseDownHandler;
-//		interactionObject.OnMouseOver += coinOnMouseDownHandler;
-//		var messenger = interactionObject.Messenger;
-
-//		messenger.addEventListener( "complete", null );
-//
-//		if( interactionObject )
-//			interactionObject.OnMouseDown = coinOnMouseDownHandler;
 	}
 
 	private void coinOnMouseDownHandler(MonoBehaviour interactionObject)
 	{
 		Debug.Log( "coinOnMouseDownHandler", interactionObject );
-		//Debug.Log( interactionObject );
-		//Debug.Log( coinGrid.GetPositionOfObject( gameObject ) );
+	}
 
-		//Debug.Log( (InteractionObject) coinGrid.Get( 0, 0 ) == gameObject );
+
+	/** StateMachine functions. */
+	private void iniStateMachine()
+	{
+		Proxy proxy = new Proxy();
+
+		proxy.gameObject = GetRandomMonsterInstance( 1, 8 );
+
+		stateMachine = new StateMachine();
+		stateMachine.OnExit += stateMachineOnExitHandler;
+		stateMachine.OnExit += stateMachineOnEnterHandler;
+
+		stateMachine.AddState( ID_STATE_COIN_SELECT, new CoinSelectState( proxy ) );
+		stateMachine.SetState( ID_STATE_COIN_SELECT );
+	}
+
+	private void stateMachineOnExitHandler(State state)
+	{
+		Debug.Log( state.id );
+	}
+
+	private void stateMachineOnEnterHandler(State state)
+	{
+		Debug.Log( state.id );
 	}
 }

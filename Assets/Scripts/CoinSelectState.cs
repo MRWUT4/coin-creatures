@@ -5,8 +5,8 @@ using System.Reflection;
 public class CoinSelectState : State
 {
 	private Proxy proxy;
+	private Tween tween;
 
-	public double x = 10;
 
 	public CoinSelectState(Proxy proxy)
 	{
@@ -35,7 +35,7 @@ public class CoinSelectState : State
 
 	public override void Update()
 	{
-
+		tween.Update();
 	}
 
 
@@ -45,37 +45,19 @@ public class CoinSelectState : State
 
 	private void initVariables()
 	{
-		object setup = new 
-		{ 
-			x = 200,
-			ease = "Back.EaseIn"
-		};
+		Vector3 vector3 = proxy.gameObject.transform.position;
 
+		tween = new Tween( vector3, 2, new { y = 0, ease = "Back.EaseInOut" } );
 
-		// Debug.Log( foo.GetType() );
-		// Debug.Log( foo.GetType().GetProperty( "bar" ) );
-
-		// Debug.Log( Tween.GetDynamicDouble( this, "x" ) );
-
-		//Debug.Log( setup.GetValue( "test1" ) );
-
-		Tween tween = new Tween( this, 0, setup );
-		//Debug.Log( "CoinSelectState.initVariables" );
-
-		//var item = new { test1 = "val", test2 = "val2" };
+		// Debug.Log( tween.GetDictionaryAtFrame( 10 )[ "y" ] );
+		tween.OnUpdate += tweenOnUpdateHandler;
 	}
-}
 
-public class Foo
-{
-    public Int32 bar
-    {
-        get
-        {
-            return 0;
-        }
-        set
-        {
-        }
-    }
+	private void tweenOnUpdateHandler(Tween tween)
+	{
+		Vector3 vector3 = (Vector3)tween.Instance;
+		// Debug.Log( vector3.y );
+
+		proxy.gameObject.transform.position = (Vector3)tween.Instance;
+	}
 }
