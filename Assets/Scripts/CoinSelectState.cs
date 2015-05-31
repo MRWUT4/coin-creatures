@@ -53,6 +53,7 @@ public class CoinSelectState : State
 	{
 		object setup = new 
 		{ 
+			x = 200,
 			ease = "Back.EaseIn"
 		};
 

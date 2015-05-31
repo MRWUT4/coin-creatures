@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -19,7 +20,7 @@ public class Tween
 	private object[] easeValueList = new object[]{ 0, 0, 0, 0 };
 	private bool hasStarted;
 	private bool hasCompleted;
-	private object beginValues;
+	private Dictionary<string, double> beginValues;
 
 	public Tween(object instance, double duration, object setup)
 	{
@@ -33,8 +34,10 @@ public class Tween
 		this.ease = (string)GetDynamicValue( setup, "ease" );
 		this.easeMethodInfo = GetMethodInfo( this.ease );
 
+		initBeginValues();
+
 		Debug.Log( this.delay );
-		Debug.Log( GetEase( 1, 1, 1, 1 ) );
+		Debug.Log( GetEase( 1, 1, 1, 1 ) );	
 	}
 
 
@@ -205,30 +208,17 @@ public class Tween
 
 	private void initBeginValues()
 	{
-		beginValues = new {};
-
+		beginValues = new Dictionary<string, double>();
 		Type type = setup.GetType();
 
 		foreach( PropertyInfo propertyInfo in type.GetProperties() )
 		{
-		// 	// Debug.Log( propertyInfo );
-		// 	// if( propertyInfo.CanRead )
-		// 	// {
-		// 	// 	object firstValue = propertyInfo.GetValue(first, null);
-		// 	// 	object secondValue = propertyInfo.GetValue(second, null);
-	
-		// 	// 	if( !object.Equals(firstValue, secondValue) )
-		// 	// 	{
-		// 	// 		return false;
-		// 	// 	}
-		// 	// }
-		}
+			string name = propertyInfo.Name;
+			object value = propertyInfo.GetValue( setup, null );
 
-	   //  for( var property in this.setup )
-	   //  {
-	   //  	if( !this.getIsIgnoredProperty( property ) )
-				// beginValues[ property ] = this.object[ property ];
-	   //  }
+			if( !GetIsIgnoredProperty( name ) )
+				beginValues.Add( name, Convert.ToDouble( value ) );
+		}
 	}
 
 	// private void updateStart()
