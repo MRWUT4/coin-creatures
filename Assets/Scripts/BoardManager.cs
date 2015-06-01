@@ -120,7 +120,7 @@ public class BoardManager : MonoBehaviour
 	{
 		Proxy proxy = new Proxy();
 
-		proxy.gameObject = GetRandomMonsterInstance( 1, 8 );
+		proxy.gameObject = GetRandomMonsterInstance( 1, 0 );
 
 		stateMachine = new StateMachine();
 		stateMachine.OnExit += stateMachineOnExitHandler;

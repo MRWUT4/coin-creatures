@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\BoardManager.cs" />
      <Compile Include="Assets\Scripts\CoinSelectState.cs" />
+     <Compile Include="Assets\Scripts\DoTween.cs" />
      <Compile Include="Assets\Scripts\Easing.cs" />
      <Compile Include="Assets\Scripts\Grid.cs" />
      <Compile Include="Assets\Scripts\GridStack.cs" />

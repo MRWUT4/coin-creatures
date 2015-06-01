@@ -6,6 +6,7 @@ public class CoinSelectState : State
 {
 	private Proxy proxy;
 	private Tween tween;
+	private DoTween doTween;
 
 
 	public CoinSelectState(Proxy proxy)
@@ -35,7 +36,8 @@ public class CoinSelectState : State
 
 	public override void Update()
 	{
-		tween.Update();
+		doTween.Update();
+		// tween.Update();
 	}
 
 
@@ -46,18 +48,32 @@ public class CoinSelectState : State
 	private void initVariables()
 	{
 		Vector3 vector3 = proxy.gameObject.transform.position;
+		
+		doTween = new DoTween();
+		// doTween.To( vector3, 2, new { y = 20, ease = "Elastic.EaseInOut" } );
 
-		tween = new Tween( vector3, 2, new { y = 0, ease = "Back.EaseInOut" } );
+		// doTween.OnUpdate += doTweenOnUpdateHandler;
+		// doTween.OnComplete += doTweenOnCompleteHandler;
 
-		// Debug.Log( tween.GetDictionaryAtFrame( 10 )[ "y" ] );
-		tween.OnUpdate += tweenOnUpdateHandler;
+		object target = new { x = 0, ease = "asd" };
+
+		Tween.SetObjectValue( target, "ease", "foo" );
+		Debug.Log( Tween.GetObjectValue( target, "ease" ) );
+
+		// doTween.Start( target, new { y = 20, ease = "Elastic.EaseInOut" } );
+
+		// Debug.Log( "..");
 	}
 
-	private void tweenOnUpdateHandler(Tween tween)
+	private void doTweenOnUpdateHandler(Tween tween)
 	{
-		Vector3 vector3 = (Vector3)tween.Instance;
-		// Debug.Log( vector3.y );
+		Vector3 vector3 = (Vector3)tween.Target;
+		proxy.gameObject.transform.position = (Vector3)tween.Target;
+	}
 
-		proxy.gameObject.transform.position = (Vector3)tween.Instance;
+	private void doTweenOnCompleteHandler(Tween tween)
+	{
+		Vector3 vector3 = (Vector3)tween.Target;
+		doTween.To( vector3, 2, new { y = 0, ease = "Back.EaseInOut" } );
 	}
 }
