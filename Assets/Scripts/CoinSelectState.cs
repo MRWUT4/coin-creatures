@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Reflection;
+using System.Collections.Generic;
 
 public class CoinSelectState : State
 {
@@ -50,19 +51,10 @@ public class CoinSelectState : State
 		Vector3 vector3 = proxy.gameObject.transform.position;
 		
 		doTween = new DoTween();
-		// doTween.To( vector3, 2, new { y = 20, ease = "Elastic.EaseInOut" } );
-
-		// doTween.OnUpdate += doTweenOnUpdateHandler;
-		// doTween.OnComplete += doTweenOnCompleteHandler;
-
-		object target = new { x = 0, ease = "asd" };
-
-		Tween.SetObjectValue( target, "ease", "foo" );
-		Debug.Log( Tween.GetObjectValue( target, "ease" ) );
-
-		// doTween.Start( target, new { y = 20, ease = "Elastic.EaseInOut" } );
-
-		// Debug.Log( "..");
+		doTween.OnUpdate += doTweenOnUpdateHandler;
+		
+		Tween tween = doTween.To( vector3, 2, new { y = 20, ease = "Elastic.EaseInOut" } );
+		tween.OnComplete += doTweenOnCompleteHandler;
 	}
 
 	private void doTweenOnUpdateHandler(Tween tween)

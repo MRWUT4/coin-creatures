@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DoTween
@@ -19,28 +20,12 @@ public class DoTween
 	 * Event interface.
 	 */
 
-	public delegate void OnStartEventHandler( Tween tween );
-	public event OnStartEventHandler OnStart;
-	
-	protected virtual void InvokeStart(Tween tween) 
-	{
-		if( OnStart != null ) OnStart( tween );
-	}
-
 	public delegate void OnUpdateEventHandler( Tween tween );
 	public event OnUpdateEventHandler OnUpdate;
 	
 	protected virtual void InvokeUpdate(Tween tween) 
 	{
 		if( OnUpdate != null ) OnUpdate( tween );
-	}
-
-	public delegate void OnCompleteEventHandler( Tween tween );
-	public event OnCompleteEventHandler OnComplete;
-	
-	protected virtual void InvokeComplete(Tween tween) 
-	{
-		if( OnComplete != null ) OnComplete( tween );
 	}
 
 
@@ -57,15 +42,16 @@ public class DoTween
 			if( tween != null )
 			{
 				if( tween.GetIsFirstFrame() )
-					InvokeStart( tween );
+					tween.InvokeStart();
 
 				tween.Update();
 				InvokeUpdate( tween );
+				tween.InvokeUpdate();
 
 				if( tween.GetComplete() )
 				{
 					tweenList.RemoveAt( i );
-					InvokeComplete( tween );
+					tween.InvokeComplete();
 				}
 			}
 		}
@@ -108,7 +94,14 @@ public class DoTween
 		return tween;
 	}
 
+
+	/** Ease object to values. */
 	public Tween To(object target, float duration, object setup)
+	{
+		return To( target, duration, ObjectToDictionary( setup ) );
+	}
+
+	public Tween To(object target, float duration, Dictionary<string, object> setup)
 	{
 		Tween tween = new Tween( target, duration, setup);
 		Add( tween );
@@ -116,38 +109,43 @@ public class DoTween
 		return tween;
 	}
 
-	// public Tween From(object target, float duration, object setup)
-	// {
-	// 	object end = new Object();
 
-	// 	Type type = setup.GetType();
-		
-	// 	foreach( PropertyInfo propertyInfo in type.GetProperties() )
-	// 	{
-	// 		if( !Tween.GetIsIgnoredProperty( propertyInfo.Name ) )
-	// 			Tween.SetObjectFloat( end, propertyInfo.Name, Convert.ToSingle( propertyInfo.GetValue( setup, null ) ) );
-	// 	}
-
-	// 	foreach( PropertyInfo propertyInfo in type.GetProperties() )
-	// 	{
-	// 		if( !Tween.GetIsIgnoredProperty( propertyInfo.Name ) )
-	// 		{
-	// 			float value = Convert.ToSingle( Tween.GetObjectProperty( target, propertyInfo.Name ) );
-	// 			string ease = Convert.ToString( Tween.GetObjectProperty( target, "ease" ) );
-
-	// 			Tween.SetObjectFloat( end, propertyInfo.Name, value );
-	// 			Tween.SetObjectValue( end, "ease", ease );
-	// 		}
-	// 	}
-
-	// 	Start( target, setup );
-	// 	Tween tween = To( target, duration, end );
-
-	// 	return tween;
-	// }
-
-	public void Start(object target, object setup)
+	/** Ease object from values to begin values. */
+	public Tween From(object target, float duration, object setup)
 	{
+		return From( target, duration, ObjectToDictionary( setup ) );
+	}
+
+	public Tween From(object target, float duration, Dictionary<string, object> setup)
+	{	
+		Dictionary<string, object> dictionaryEnd = new Dictionary<string, object>();
+
+		for( int i = 0; i < setup.Count; ++i )
+		{
+			KeyValuePair<string, object> pair = setup.ElementAt( i );
+			string name = pair.Key;
+
+			if( !Tween.GetIsIgnoredProperty( name ) )
+			{
+				object value = Tween.GetObjectValue( target, name );
+				dictionaryEnd.Add( name, value );
+			}
+			else
+				dictionaryEnd.Add( name, pair.Value );
+		}
+
+		Tween tweenStart = new Tween( target, 0, setup );
+		tweenStart.Update();
+
+		Tween tween = To( target, duration, dictionaryEnd );
+
+		return tween;
+	}
+
+	public Dictionary<string, object> ObjectToDictionary(object setup)
+	{
+		Dictionary<string, object> dictionary = new Dictionary<string, object>();
+
 		Type type = setup.GetType();
 		
 		foreach( PropertyInfo propertyInfo in type.GetProperties() )
@@ -155,11 +153,10 @@ public class DoTween
 			string name = propertyInfo.Name;
 			object value = propertyInfo.GetValue( setup, null );
 			
-			Debug.Log( name );
-			Debug.Log( value );
-
-			// Tween.SetObjectValue( target, name, value );
+			dictionary.Add( name, value );
 		}
+
+		return dictionary;
 	}
 
 	private void Kill(bool killTweens = true)

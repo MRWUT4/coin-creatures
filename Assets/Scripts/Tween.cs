@@ -7,12 +7,15 @@ using UnityEngine;
 
 public class Tween
 {
-	public static string[] IGNORED_PROPERTIES = { "ease", "id", "delay", "ignorePropertys" };
+	public static string KEY_DELAY = "delay";
+	public static string KEY_EASE = "ease";
+	public static string DEFAULT_EASE = "Cubic.EaseOut";
+	public static string[] IGNORED_PROPERTIES = { KEY_EASE, KEY_DELAY };
 	public static int FPS = (int)Math.Floor( 1 / Time.fixedDeltaTime );
 
 	public object Target;
 	public float Duration;
-	public object Setup;
+	public Dictionary<string, object> Setup;
 
 	private int frame = 0;
 	private float delay;
@@ -24,29 +27,48 @@ public class Tween
 	private Dictionary<string, float> beginValues;
 
 
-	public Tween(object target, float duration, object setup)
+	public Tween(object target, float duration, Dictionary<string, object> setup)
 	{
 		this.Target = target;
 		this.Duration = duration;
 		this.Setup = setup;
 
 		this.frame = 0;
-		this.delay = (float)Convert.ToSingle( GetObjectValue( setup, "delay" ) );
-		this.ease = (string)GetObjectValue( setup, "ease" );
+		this.delay = setup.ContainsKey( KEY_DELAY ) ? Convert.ToSingle( setup[ KEY_DELAY ] ) : 0;
+		this.ease = setup.ContainsKey( KEY_EASE ) ? Convert.ToString( setup[ KEY_EASE ] ) : DEFAULT_EASE;
 		this.easeMethodInfo = GetMethodInfo( this.ease );
 
 		initBeginValues();
-		updateCurrentFrameProperties();
 	}
 
 
-	// public delegate void OnUpdateEventHandler( Tween tween );
-	// public event OnUpdateEventHandler OnUpdate;
+	/**
+	 * Event interface.
+	 */
+
+	public delegate void OnStartEventHandler( Tween tween );
+	public event OnStartEventHandler OnStart;
 	
-	// protected virtual void InvokeUpdate() 
-	// {
-	// 	if( OnUpdate != null ) OnUpdate( this );
-	// }
+	public virtual void InvokeStart() 
+	{
+		if( OnStart != null ) OnStart( this );
+	}
+
+	public delegate void OnUpdateEventHandler( Tween tween );
+	public event OnUpdateEventHandler OnUpdate;
+	
+	public virtual void InvokeUpdate() 
+	{
+		if( OnUpdate != null ) OnUpdate( this );
+	}
+
+	public delegate void OnCompleteEventHandler( Tween tween );
+	public event OnCompleteEventHandler OnComplete;
+	
+	public virtual void InvokeComplete() 
+	{
+		if( OnComplete != null ) OnComplete( this );
+	}
 
 
 	/**
@@ -77,8 +99,8 @@ public class Tween
 
  	public static void SetObjectValue(object target, string property, object value)
  	{
-		PropertyInfo info = target.GetType().GetProperty( property );
-		Debug.Log( info );
+ 		Type type = target.GetType();
+		PropertyInfo info = type.GetProperty( property );
 
 		if( info != null ) info.SetValue( property, value, null );
  	}
@@ -178,25 +200,24 @@ public class Tween
 		{
 			dictionary = new Dictionary<string, float>();
 
-			Type type = Setup.GetType();
-			
-			foreach( PropertyInfo propertyInfo in type.GetProperties() )
+			for( int i = 0; i < Setup.Count; ++i )
 			{
-				string property = propertyInfo.Name;
-			
-				int DurationFrame = frame - GetDelayFrames();
+				KeyValuePair<string, object> pair = Setup.ElementAt( i );
+
+				string property = pair.Key;
 
 				if( !GetIsIgnoredProperty( property ) )
 				{
-					float value = Convert.ToSingle( propertyInfo.GetValue( Setup, null ) );
+					float value = Convert.ToSingle( pair.Value );
+					int durationFrame = frame - GetDelayFrames();
 
 					dictionary[ property ] = float.NaN;
 
-					float t = DurationFrame * GetTimescale();
+					float t = durationFrame * GetTimescale();
 					float b = beginValues[ property ];
 					float c = value - b;
 
-					if( DurationFrame < GetDurationFrames() - 1 )
+					if( durationFrame < GetDurationFrames() - 1 )
 						dictionary[ property ] = GetEase( t, b, c, Duration );
 					else
 						dictionary[ property ] = value;
@@ -227,7 +248,6 @@ public class Tween
 	public void Update()
 	{
 		updateCurrentFrameProperties();
-		// InvokeUpdate();
 	}
 
 
@@ -238,11 +258,11 @@ public class Tween
 	private void initBeginValues()
 	{
 		beginValues = new Dictionary<string, float>();
-		Type type = Setup.GetType();
 
-		foreach( PropertyInfo propertyInfo in type.GetProperties() )
+		for( int i = 0; i < Setup.Count; ++i )
 		{
-			string name = propertyInfo.Name;
+			KeyValuePair<string, object> pair = Setup.ElementAt( i );
+			string name = pair.Key;
 
 			if( !GetIsIgnoredProperty( name ) )
 			{
