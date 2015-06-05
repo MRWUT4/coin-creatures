@@ -70,6 +70,12 @@ public class StateMachine
 			CurrentState.Update();
 	}
 
+	public void FixedUpdate()
+	{
+		if( CurrentState != null )
+			CurrentState.FixedUpdate();
+	}
+
 	public void AddState(string id, State state) 
 	{
 		state.id = id;

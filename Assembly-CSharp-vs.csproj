@@ -50,8 +50,11 @@
      <Compile Include="Assets\Scripts\CoinSelectState.cs" />
      <Compile Include="Assets\Scripts\DoTween.cs" />
      <Compile Include="Assets\Scripts\Easing.cs" />
+     <Compile Include="Assets\Scripts\Facade.cs" />
+     <Compile Include="Assets\Scripts\GameState.cs" />
      <Compile Include="Assets\Scripts\Grid.cs" />
      <Compile Include="Assets\Scripts\GridStack.cs" />
+     <Compile Include="Assets\Scripts\IState.cs" />
      <Compile Include="Assets\Scripts\InteractionObject.cs" />
      <Compile Include="Assets\Scripts\Proxy.cs" />
      <Compile Include="Assets\Scripts\State.cs" />

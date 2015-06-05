@@ -23,16 +23,16 @@ public class BoardManager : MonoBehaviour
 	 * Public interface.
 	 */
 
-	void Start () 
+	void Start() 
 	{
 		initVariables();
 		initGridStack();
 		iniStateMachine();
 	}
 
-	void Update () 
+	void FixedUpdate() 
 	{
-		stateMachine.Update();
+		stateMachine.FixedUpdate();
 	}
 
 

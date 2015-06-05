@@ -35,8 +35,6 @@ public abstract class State
 	/**
 	 * Abstract interface.
 	 */
-
-	public abstract void Update();
 	
 	public abstract void Enter();
 	
@@ -49,5 +47,9 @@ public abstract class State
 	 * Public interface.
 	 */
 	
-	public void Init(){}
+	public virtual void Init(){}
+
+	public virtual void Update(){}
+
+	public virtual void FixedUpdate(){}
 }
