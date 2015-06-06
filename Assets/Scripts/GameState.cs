@@ -1,11 +1,8 @@
 using UnityEngine;
 
-public class GameState : MonoBehaviour, IState
+public class GameState : State
 {
-	public GameState()
-	{
-	
-	}
+	public Proxy proxy;
 
 
 	/**
@@ -27,7 +24,7 @@ public class GameState : MonoBehaviour, IState
 
 	}
 
-	public override void Update()
+	public override void FixedUpdate()
 	{
 
 	}

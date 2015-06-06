@@ -1,11 +1,12 @@
 using System.Collections;
+using System.Collections.Generic;
 
 public class StateMachine 
 {	
 	public State CurrentState = null;
 
-	private ArrayList stateList = new ArrayList(); 
-	private ArrayList previousStateList = new ArrayList();
+	private List<State> stateList = new List<State>(); 
+	private List<State> previousStateList = new List<State>();
 	
 
 	/**

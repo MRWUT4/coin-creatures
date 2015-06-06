@@ -1,7 +1,7 @@
 public abstract class State
 {
 	public string id;
-	public object setup;
+	public object proxy;
 	
 
 	/**
@@ -31,21 +31,16 @@ public abstract class State
 		if( OnMessage != null ) OnMessage( this );
 	}
 
-	
-	/**
-	 * Abstract interface.
-	 */
-	
-	public abstract void Enter();
-	
-	public abstract void Exit();
-	
-	public abstract void Kill();
-
 
 	/**
-	 * Public interface.
+	 * Virtual interface.
 	 */
+
+	public virtual void Enter(){}
+	
+	public virtual void Exit(){}
+	
+	public virtual void Kill(){}
 	
 	public virtual void Init(){}
 
