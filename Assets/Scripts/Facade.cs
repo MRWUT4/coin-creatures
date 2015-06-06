@@ -11,6 +11,7 @@ public class Facade : MonoBehaviour
 	public struct StateStruct 
 	{
 		public string id;
+		public string idNext;
 		public MonoScript state;
 	}
 
@@ -35,7 +36,7 @@ public class Facade : MonoBehaviour
 
 	void FixedUpdate() 
 	{
-		//stateMachine.FixedUpdate();
+		stateMachine.FixedUpdate();
 	}
 
 
@@ -53,16 +54,18 @@ public class Facade : MonoBehaviour
 		    StateStruct stateStruct = stateScriptArray[ i ];
 
 		    string id = stateStruct.id;
-		    State state = createState( stateStruct.state );
+		    State state = createState( id, stateStruct.state );
 
 		    stateDicitonary.Add( id, state );
 		}
 	}
 
-	private State createState(MonoScript monoScript)
+	private State createState(string id, MonoScript monoScript)
 	{
 	    Type type = monoScript.GetClass();
 	    State state = Activator.CreateInstance( type ) as State;
+
+	    state.id = id;
 	    state.proxy = proxy;
 
 	    return state;
@@ -86,6 +89,6 @@ public class Facade : MonoBehaviour
 
 	private void stateMachineOnExitHandler(State state)
 	{
-		
+		Debug.Log( "State " + state.id );		
 	}
 }

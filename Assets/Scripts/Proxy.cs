@@ -6,7 +6,12 @@ using UnityEditor;
 using UnityEngine;
 
 [Serializable]
-public class Proxy
+public class Proxy : GameObjectProxy
 {
-	public GameObject gameObject;
+	public int Columns = 6;
+	public int Rows = 8;
+	public int Distance = 1;
+
+	public GameObject[] MonsterList;
+	public GameObject Coin;
 }

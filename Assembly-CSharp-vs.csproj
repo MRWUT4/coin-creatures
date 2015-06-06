@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\DoTween.cs" />
      <Compile Include="Assets\Scripts\Easing.cs" />
      <Compile Include="Assets\Scripts\Facade.cs" />
+     <Compile Include="Assets\Scripts\GameSetup.cs" />
      <Compile Include="Assets\Scripts\GameState.cs" />
      <Compile Include="Assets\Scripts\Grid.cs" />
      <Compile Include="Assets\Scripts\GridStack.cs" />

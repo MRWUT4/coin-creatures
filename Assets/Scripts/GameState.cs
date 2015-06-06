@@ -1,32 +1,14 @@
 using UnityEngine;
 
-public class GameState : State
+public class GameState : GameObjectState
 {
-	public Proxy proxy;
-
-
 	/**
 	 * Public interface.
 	 */
 
 	public override void Enter()
 	{
-		initVariables();
-	}
-
-	public override void Exit()
-	{
-
-	}
-
-	public override void Kill()
-	{
-
-	}
-
-	public override void FixedUpdate()
-	{
-
+		initComponents();
 	}
 
 
@@ -34,8 +16,9 @@ public class GameState : State
 	 * Private interface.
 	 */
 
-	private void initVariables()
+	/** Create gameObject components. */
+	private void initComponents()
 	{
-		Debug.Log( "initVariables" );
+		gameObject.AddComponent<GameSetup>();
 	}
 }
