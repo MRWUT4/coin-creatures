@@ -48,18 +48,19 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\BoardManager.cs" />
      <Compile Include="Assets\Scripts\CoinSelectState.cs" />
-     <Compile Include="Assets\Scripts\DoTween.cs" />
-     <Compile Include="Assets\Scripts\Easing.cs" />
+     <Compile Include="Assets\Scripts\DavidOchmann\Utils\DoTween\DoTween.cs" />
+     <Compile Include="Assets\Scripts\DavidOchmann\Utils\DoTween\Easing.cs" />
+     <Compile Include="Assets\Scripts\DavidOchmann\Utils\DoTween\Tween.cs" />
+     <Compile Include="Assets\Scripts\DavidOchmann\Utils\StateMachine\State.cs" />
+     <Compile Include="Assets\Scripts\DavidOchmann\Utils\StateMachine\StateMachine.cs" />
      <Compile Include="Assets\Scripts\Facade.cs" />
      <Compile Include="Assets\Scripts\GameSetup.cs" />
+     <Compile Include="Assets\Scripts\GameSetupState.cs" />
      <Compile Include="Assets\Scripts\GameState.cs" />
      <Compile Include="Assets\Scripts\Grid.cs" />
      <Compile Include="Assets\Scripts\GridStack.cs" />
      <Compile Include="Assets\Scripts\InteractionObject.cs" />
      <Compile Include="Assets\Scripts\Proxy.cs" />
-     <Compile Include="Assets\Scripts\State.cs" />
-     <Compile Include="Assets\Scripts\StateMachine.cs" />
-     <Compile Include="Assets\Scripts\Tween.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

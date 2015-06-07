@@ -2,18 +2,61 @@ using UnityEngine;
 
 public class GameSetup : MonoBehaviour
 {
+	private State state;
+	private Proxy proxy;
+	private Names names;
+
+	private Grid monsterGrid;
+	private Grid coinGrid;
+
+
+	/**
+	 * Getter / Setter
+	 */
+
+	/** GameObject. */
+	public Vector3 GetPosition(int x, int y)
+	{
+		return new Vector3( x * proxy.Distance, y * proxy.Distance );
+	}
+
+	public GameObject GetGameObjectCloneAt(GameObject original, int x, int y)
+	{
+		GameObject clone = (GameObject) Instantiate( original, GetPosition(x, y), Quaternion.identity );
+		clone.transform.parent = gameObject.transform;
+
+		return clone;
+	}
+
+
+	/** Monster. */
+	public GameObject GetRandomMonster()
+	{
+		GameObject[] monsterList = proxy.MonsterList;
+		return monsterList[ UnityEngine.Random.Range( 0, monsterList.Length ) ];
+	}
+
+	public GameObject GetRandomMonsterInstance(int x, int y)
+	{
+		return GetGameObjectCloneAt( GetRandomMonster(), x, y );
+	}
+
+
+	/** Coin. */
+	public GameObject GetCoinInstance(int x, int y)
+	{
+		return GetGameObjectCloneAt( proxy.Coin, x, y );
+	}
+
+
 	/**
 	 * Component interface.
 	 */
 
 	public void Start()
 	{
-		initVariables();	
-	}
-
-	public void FixedUpdate()
-	{
-		
+		initVariables();
+		initGridStack();
 	}
 
 
@@ -21,17 +64,42 @@ public class GameSetup : MonoBehaviour
 	 * Private interface.
 	 */
 
+	/** Create Module Variables. */
 	private void initVariables()
 	{
-		State state = gameObject.GetComponent<StateInfo>().state;
-		Proxy proxy = state.proxy as Proxy;
-		state.InvokeExit();
-
-		Debug.Log( proxy.Container );
+		state = gameObject.GetComponent<StateInfo>().state;
+		proxy = state.proxy as Proxy;
+		names = proxy.Names;
 	}
 
-	private void stateOnExitHandler(State state)
+
+	/** GridStack functions. */
+	private void initGridStack()
 	{
-		Debug.Log( "stateOnExitHandler");
+		GridStack gridStack = proxy.GameGridStack;
+		gridStack = new GridStack( proxy.Columns, proxy.Rows );
+
+		monsterGrid = gridStack.AddGrid( names.Monster );
+		monsterGrid.ForEveryObjectCall( setupMonsterGridValues );
+
+		coinGrid = gridStack.AddGrid( names.Coin );
+		coinGrid.ForEveryObjectCall( setupCoinGridValues );
+	}
+
+	private void setupMonsterGridValues(int x, int y, object value)
+	{
+		var monster = GetRandomMonsterInstance( x, y );
+		monsterGrid.Set( x, y, monster ); 
+	}
+
+
+	/** Setup Coins */
+	private void setupCoinGridValues(int x, int y, object value)
+	{
+		var coin = GetCoinInstance( x, y );
+		coinGrid.Set( x, y, coin );
+
+		// var interactionObject = ( InteractionObject ) coin.GetComponent< InteractionObject >();
+		// interactionObject.OnMouseDown += coinOnMouseDownHandler;
 	}
 }

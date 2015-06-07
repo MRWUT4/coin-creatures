@@ -66,14 +66,18 @@ public class StateInfo : MonoBehaviour
 
 public abstract class GameObjectState : State
 {
-	public GameObject gameObject = new GameObject();
+	public GameObject gameObject;
 	
 
 	/**
 	 * Constructor.
 	 */
 
-	public GameObjectState(){}
+	public GameObjectState(GameObject gameObject, GameObjectProxy proxy)
+	{
+		this.gameObject = gameObject;
+		this.proxy = proxy;
+	}
 
 
 	/**

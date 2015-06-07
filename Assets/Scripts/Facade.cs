@@ -52,21 +52,18 @@ public class Facade : MonoBehaviour
 		for( int i = 0; i < stateScriptArray.Length; ++i )
 		{
 		    StateStruct stateStruct = stateScriptArray[ i ];
-
+		    State state = createState( stateStruct.state );
 		    string id = stateStruct.id;
-		    State state = createState( id, stateStruct.state );
 
 		    stateDicitonary.Add( id, state );
 		}
 	}
 
-	private State createState(string id, MonoScript monoScript)
+	private State createState(MonoScript monoScript)
 	{
 	    Type type = monoScript.GetClass();
-	    State state = Activator.CreateInstance( type ) as State;
-
-	    state.id = id;
-	    state.proxy = proxy;
+	    object[] parameters = new object[] { new GameObject(), proxy };
+	    State state = Activator.CreateInstance( type, parameters ) as State;
 
 	    return state;
 	}
