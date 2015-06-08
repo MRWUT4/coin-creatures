@@ -48,13 +48,15 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\BoardManager.cs" />
      <Compile Include="Assets\Scripts\CoinSelectState.cs" />
+     <Compile Include="Assets\Scripts\Component\CoinSelectComponent.cs" />
+     <Compile Include="Assets\Scripts\Component\GameSetupComponent.cs" />
+     <Compile Include="Assets\Scripts\Component\StateExitComponent.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\DoTween\DoTween.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\DoTween\Easing.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\DoTween\Tween.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\StateMachine\State.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\StateMachine\StateMachine.cs" />
      <Compile Include="Assets\Scripts\Facade.cs" />
-     <Compile Include="Assets\Scripts\GameSetup.cs" />
      <Compile Include="Assets\Scripts\GameSetupState.cs" />
      <Compile Include="Assets\Scripts\GameState.cs" />
      <Compile Include="Assets\Scripts\Grid.cs" />

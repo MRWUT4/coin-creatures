@@ -24,9 +24,10 @@ public class Proxy : GameObjectProxy
 
 public class Names
 {
-	public string Monster = "monster";
-	public string Coin = "coin";
+	public const string Monster = "Monster";
+	public const string Coin = "Coin";
 
 	/** game states. */
-	public string GameSetup = "gameSetup";
+	public const string GameSetupState = "GameSetupState";
+	public const string CoinSelectState = "CoinSelectState";
 }

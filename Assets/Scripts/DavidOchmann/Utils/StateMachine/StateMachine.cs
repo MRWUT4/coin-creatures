@@ -1,3 +1,4 @@
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -147,6 +148,7 @@ public class StateMachine
 
 	private void stateOnExitHandler(State state)
 	{
+		Debug.Log( "stateOnExitHandler " + state.id );
 		InvokeExit( state );	
 	}
 

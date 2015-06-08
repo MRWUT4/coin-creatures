@@ -22,9 +22,10 @@ public class GameSetupState : GameObjectState
 	 * Private interface.
 	 */
 
-	/** Add GameSetupState comopnents. */
+	/** Add GameSetupState components. */
 	private void initComponents()
 	{
-		gameObject.AddComponent<GameSetup>();
+		gameObject.AddComponent<GameSetupComponent>();
+		gameObject.AddComponent<StateExitComponent>();
 	}
 }

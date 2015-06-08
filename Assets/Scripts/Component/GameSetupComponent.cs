@@ -1,10 +1,9 @@
 using UnityEngine;
 
-public class GameSetup : MonoBehaviour
+public class GameSetupComponent : MonoBehaviour
 {
 	private State state;
 	private Proxy proxy;
-	private Names names;
 
 	private Grid monsterGrid;
 	private Grid coinGrid;
@@ -57,6 +56,7 @@ public class GameSetup : MonoBehaviour
 	{
 		initVariables();
 		initGridStack();
+		initStateExit();
 	}
 
 
@@ -69,7 +69,6 @@ public class GameSetup : MonoBehaviour
 	{
 		state = gameObject.GetComponent<StateInfo>().state;
 		proxy = state.proxy as Proxy;
-		names = proxy.Names;
 	}
 
 
@@ -79,10 +78,10 @@ public class GameSetup : MonoBehaviour
 		GridStack gridStack = proxy.GameGridStack;
 		gridStack = new GridStack( proxy.Columns, proxy.Rows );
 
-		monsterGrid = gridStack.AddGrid( names.Monster );
+		monsterGrid = gridStack.AddGrid( Names.Monster );
 		monsterGrid.ForEveryObjectCall( setupMonsterGridValues );
 
-		coinGrid = gridStack.AddGrid( names.Coin );
+		coinGrid = gridStack.AddGrid( Names.Coin );
 		coinGrid.ForEveryObjectCall( setupCoinGridValues );
 	}
 
@@ -101,5 +100,12 @@ public class GameSetup : MonoBehaviour
 
 		// var interactionObject = ( InteractionObject ) coin.GetComponent< InteractionObject >();
 		// interactionObject.OnMouseDown += coinOnMouseDownHandler;
+	}
+
+
+	/** Exit State. */
+	private void initStateExit()
+	{
+		
 	}
 }

@@ -86,7 +86,7 @@ public abstract class GameObjectState : State
 
 	public override void Init()
 	{
-		initStateGameObject();
+		initGameObjectStateGameObject();
 		initGameObjectComponents();
 	}
 	
@@ -96,10 +96,10 @@ public abstract class GameObjectState : State
 	 */
 
 	/** Create gameObject for state. */
-	private void initStateGameObject()
+	private void initGameObjectStateGameObject()
 	{
 		gameObject.name = id;
-		gameObject.transform.parent = ( proxy as GameObjectProxy ).Container.transform;
+		// gameObject.transform.parent = ( proxy as GameObjectProxy ).Container.transform;
 	}
 
 

@@ -62,7 +62,11 @@ public class Facade : MonoBehaviour
 	private State createState(MonoScript monoScript)
 	{
 	    Type type = monoScript.GetClass();
-	    object[] parameters = new object[] { new GameObject(), proxy };
+
+	    GameObject gameObject = new GameObject();
+	    gameObject.transform.parent = proxy.Container.transform;
+
+	    object[] parameters = new object[] { gameObject, proxy };
 	    State state = Activator.CreateInstance( type, parameters ) as State;
 
 	    return state;
@@ -73,8 +77,7 @@ public class Facade : MonoBehaviour
 	private void initStateMachine()
 	{
 		stateMachine = new StateMachine();
-		stateMachine.OnExit += stateMachineOnExitHandler;
-
+	
 		for( int i = 0; i < stateDicitonary.Count; ++i )
 		{
 		    KeyValuePair<string, State> pair = stateDicitonary.ElementAt( i );
@@ -82,10 +85,5 @@ public class Facade : MonoBehaviour
 		}
 
 		stateMachine.SetState( startState );
-	}
-
-	private void stateMachineOnExitHandler(State state)
-	{
-		Debug.Log( "State " + state.id );		
 	}
 }

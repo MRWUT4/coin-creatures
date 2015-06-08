@@ -1,71 +1,30 @@
-// using UnityEngine;
-// using System;
-// using System.Reflection;
-// using System.Collections.Generic;
+using UnityEngine;
 
-// public class CoinSelectState : GameObjectState
-// {
-// 	private Proxy proxy;
-// 	private Tween tween;
-// 	private DoTween doTween;
+public class CoinSelectState : GameObjectState
+{
+	private StateMachine stateMachine;
 
 
-// 	public CoinSelectState(Proxy proxy)
-// 	{
-// 		this.proxy = proxy;
-// 	}
+	public CoinSelectState(GameObject gameObject, Proxy proxy) : base(gameObject, proxy){}
 
 
-// 	/**
-// 	 * Public interface.
-// 	 */
+	/**
+	 * Public interface.
+	 */
 
-// 	public override void Enter()
-// 	{
-// 		// initVariables();
-// 	}
-
-// 	public override void Exit()
-// 	{
-
-// 	}
-
-// 	public override void Kill()
-// 	{
-
-// 	}
-
-// 	public override void Update()
-// 	{
-// 		// doTween.Update();
-// 		// tween.Update();
-// 	}
+	public override void Enter()
+	{
+		initComponents();
+	}
 
 
-// 	/**
-// 	 * Private interface.
-// 	 */
+	/**
+	 * Private interface.
+	 */
 
-// 	private void initVariables()
-// 	{
-// 		Vector3 vector3 = proxy.gameObject.transform.position;
-		
-// 		doTween = new DoTween();
-// 		doTween.OnUpdate += doTweenOnUpdateHandler;
-		
-// 		Tween tween = doTween.To( vector3, 2, new { y = 20, ease = "Elastic.EaseInOut" } );
-// 		tween.OnComplete += doTweenOnCompleteHandler;
-// 	}
-
-// 	private void doTweenOnUpdateHandler(Tween tween)
-// 	{
-// 		Vector3 vector3 = (Vector3)tween.Target;
-// 		proxy.gameObject.transform.position = (Vector3)tween.Target;
-// 	}
-
-// 	private void doTweenOnCompleteHandler(Tween tween)
-// 	{
-// 		Vector3 vector3 = (Vector3)tween.Target;
-// 		doTween.To( vector3, 2, new { y = 0, ease = "Back.EaseInOut" } );
-// 	}
-// }
+	/** Add CoinSelectState components. */
+	private void initComponents()
+	{
+		gameObject.AddComponent<CoinSelectComponent>();
+	}
+}

@@ -6,6 +6,8 @@ public class GameState : GameObjectState
 	private State state;
 	private Proxy proxy;
 	private Names names;
+	private GameObject stateGameObject;
+
 
 	public GameState(GameObject gameObject, Proxy proxy) : base(gameObject, proxy){}
 
@@ -17,6 +19,7 @@ public class GameState : GameObjectState
 	public override void Enter()
 	{
 		initVariables();
+		initStateGameObject();
 		initStateMachine();
 	}
 
@@ -30,7 +33,14 @@ public class GameState : GameObjectState
 	{
 		state = gameObject.GetComponent<StateInfo>().state;
 		proxy = state.proxy as Proxy;
-		names = proxy.Names;
+	}
+
+
+	/** InitState GameObject. */
+	private void initStateGameObject()
+	{
+		stateGameObject = new GameObject();
+		stateGameObject.transform.SetParent( gameObject.transform );
 	}
 
 
@@ -38,9 +48,21 @@ public class GameState : GameObjectState
 	private void initStateMachine()
 	{
 		stateMachine = new StateMachine();
+		stateMachine.OnExit += stateMachineOnExitHandler;
+
+		stateMachine.AddState( Names.GameSetupState, new GameSetupState( stateGameObject, proxy ) );
+		stateMachine.AddState( Names.CoinSelectState, new CoinSelectState( stateGameObject, proxy ) );
 		
-		stateMachine.AddState( names.GameSetup, new GameSetupState( gameObject, proxy ) );
-		
-		stateMachine.SetState( names.GameSetup );
+		stateMachine.SetState( Names.GameSetupState );
+	}
+
+	private void stateMachineOnExitHandler(State state)
+	{
+		switch( state.id )
+		{
+			case Names.GameSetupState:
+				stateMachine.SetState( Names.CoinSelectState );
+				break;
+		}
 	}
 }
