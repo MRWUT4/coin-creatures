@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\Component\CoinSelectComponent.cs" />
      <Compile Include="Assets\Scripts\Component\GameSetupComponent.cs" />
      <Compile Include="Assets\Scripts\Component\StateExitComponent.cs" />
+     <Compile Include="Assets\Scripts\DavidOchmann\Utils\Assist\Assist.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\DoTween\DoTween.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\DoTween\Easing.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\DoTween\Tween.cs" />

@@ -148,7 +148,6 @@ public class StateMachine
 
 	private void stateOnExitHandler(State state)
 	{
-		Debug.Log( "stateOnExitHandler " + state.id );
 		InvokeExit( state );	
 	}
 

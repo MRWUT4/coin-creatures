@@ -1,9 +1,13 @@
+using System.Collections;
 using UnityEngine;
 
 public class CoinSelectComponent : MonoBehaviour
 {
     private State state;
     private Proxy proxy;
+    private GridStack gameGridStack;
+    private Grid coinGrid;
+    private ArrayList selectionList;
 
 
     /**
@@ -13,6 +17,7 @@ public class CoinSelectComponent : MonoBehaviour
     public void Start()
     {
         initVariables();
+        initGridCoins();
     }
 
 
@@ -25,7 +30,39 @@ public class CoinSelectComponent : MonoBehaviour
     {
         state = gameObject.GetComponent<StateInfo>().state;
         proxy = state.proxy as Proxy;
-        
-        Debug.Log( "CoinSelectComponent.initVariables" );
+        gameGridStack = proxy.GameGridStack;
+        coinGrid = gameGridStack.GetGrid( Names.Coin );
+        selectionList = new ArrayList();
+    }
+
+
+    /** Init grid coin functions. */
+    private void initGridCoins()
+    {
+        coinGrid.ForEveryObjectCall( setupCoin );
+    }
+
+    private void setupCoin(int x, int y, object item)
+    {
+        GameObject gameObject = item as GameObject;
+        InteractionObject interactionObject = ( InteractionObject ) gameObject.GetComponent<InteractionObject>();
+
+        interactionObject.OnMouseDown -= interactionObjectMouseHandler;
+        interactionObject.OnMouseOver -= interactionObjectMouseHandler;
+
+        interactionObject.OnMouseDown += interactionObjectMouseHandler;
+        interactionObject.OnMouseOver += interactionObjectMouseHandler;
+    }
+
+    private void interactionObjectMouseHandler(MonoBehaviour monoBehaviour)
+    {
+        object listContainsValue = Assist.ListContainsValue( selectionList, monoBehaviour );
+
+        Debug.Log( listContainsValue );
+
+        if( listContainsValue == null )
+        {
+            selectionList.Add( monoBehaviour );
+        }
     }
 }

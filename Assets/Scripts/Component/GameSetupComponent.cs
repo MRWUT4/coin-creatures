@@ -75,8 +75,8 @@ public class GameSetupComponent : MonoBehaviour
 	/** GridStack functions. */
 	private void initGridStack()
 	{
-		GridStack gridStack = proxy.GameGridStack;
-		gridStack = new GridStack( proxy.Columns, proxy.Rows );
+		GridStack gridStack = new GridStack( proxy.Columns, proxy.Rows );
+		proxy.GameGridStack = gridStack;
 
 		monsterGrid = gridStack.AddGrid( Names.Monster );
 		monsterGrid.ForEveryObjectCall( setupMonsterGridValues );

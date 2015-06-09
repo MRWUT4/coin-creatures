@@ -4,35 +4,29 @@ using UnityEngine.EventSystems;
 using UnityEngine;
 
 
-/**
- * Event delegates.
- */
-
-public delegate void OnMouseUpEventHandler( MonoBehaviour monoBehaviour );
-public delegate void OnMouseDownEventHandler( MonoBehaviour monoBehaviour );
-public delegate void OnMouseOverEventHandler( MonoBehaviour monoBehaviour );
-public delegate void OnMouseOutEventHandler( MonoBehaviour monoBehaviour );
 
 public class InteractionObject : MonoBehaviour 
 {
 	/**
 	 * Event interface.
 	 */
-
-	public event OnMouseUpEventHandler OnMouseUp;
+	public delegate void OnMouseDownEventHandler( MonoBehaviour monoBehaviour );
+	public event OnMouseDownEventHandler OnMouseDown;
 
 	protected virtual void InvokeMouseDown() 
     {
         if( OnMouseDown != null ) OnMouseDown( this );
     }
 
-	public event OnMouseDownEventHandler OnMouseDown;
+	public delegate void OnMouseUpEventHandler( MonoBehaviour monoBehaviour );
+	public event OnMouseUpEventHandler OnMouseUp;
 
    	protected virtual void InvokeMouseUp() 
     {
         if( OnMouseUp != null ) OnMouseUp( this );
     }
 
+	public delegate void OnMouseOverEventHandler( MonoBehaviour monoBehaviour );
 	public event OnMouseOverEventHandler OnMouseOver;
 
    	protected virtual void InvokeMouseOver() 
@@ -40,6 +34,7 @@ public class InteractionObject : MonoBehaviour
         if( OnMouseOver != null ) OnMouseOver( this );
     }
 
+	public delegate void OnMouseOutEventHandler( MonoBehaviour monoBehaviour );
 	public event OnMouseOutEventHandler OnMouseOut;
 
    	protected virtual void InvokeMouseOut() 
@@ -64,7 +59,8 @@ public class InteractionObject : MonoBehaviour
 	 * Private interface.
 	 */
 
-	private bool onOver = false;
+	private bool isOver = false;
+	private bool isDown = false;
 
 	private void updateMouseInteraction()
 	{
@@ -74,26 +70,29 @@ public class InteractionObject : MonoBehaviour
 
 		if( hit && hit.collider == collider )
 		{
-			if( Input.GetMouseButton( 0 ) && onOver == false )
-			{
-				onOver = true;
-				InvokeMouseOver();
-			}
-
 			if( Input.GetMouseButtonDown( 0 ) )
 			{
+				isDown = true;
 				InvokeMouseDown();
 			}
 			else
 			if( Input.GetMouseButtonUp( 0 ) )
 			{
+				isDown = false;
 				InvokeMouseUp();
+			}
+
+			
+			if( Input.GetMouseButton( 0 ) && !isOver && !isDown  )
+			{
+				isOver = true;
+				InvokeMouseOver();
 			}
 		}
 		else
-		if( onOver )
+		if( isOver )
 		{
-			onOver = false;
+			isOver = false;
 			InvokeMouseOut();
 		}
 	}
