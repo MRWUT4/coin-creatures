@@ -27,6 +27,10 @@ public class Names
 	public const string Monster = "Monster";
 	public const string Coin = "Coin";
 
+	public const string AnimationMute = "Mute";
+	public const string AnimationIdle = "Idle";
+	public const string AnimationCoinSpinOut = "CoinSpinOut";
+
 	/** game states. */
 	public const string GameSetupState = "GameSetupState";
 	public const string CoinSelectState = "CoinSelectState";

@@ -58,11 +58,28 @@ public class CoinSelectComponent : MonoBehaviour
     {
         object listContainsValue = Assist.ListContainsValue( selectionList, monoBehaviour );
 
-        Debug.Log( listContainsValue );
-
         if( listContainsValue == null )
         {
             selectionList.Add( monoBehaviour );
+
+            parseSelectionListForEnd();
+            animateItemTo( monoBehaviour );
         }
+    }
+
+
+    /** Pase selection and exit if last entry is Wrong. */
+    private void parseSelectionListForEnd()
+    {
+        
+    }
+
+
+    /** Animate selected item. */
+    private void animateItemTo(MonoBehaviour monoBehaviour)
+    {
+        Animator animator = monoBehaviour.GetComponent<Animator>();
+
+        animator.Play( Names.AnimationCoinSpinOut );
     }
 }
