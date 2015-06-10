@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Linq;
 using System.Collections.Generic;
 
 public class GridStack
@@ -27,5 +28,21 @@ public class GridStack
 	public Grid GetGrid(string id)
 	{
 		return dictionary[ id ];
+	}
+
+	public Dictionary<string, object> GetIntersection(int x, int y)
+	{
+		Dictionary<string, object> intersection = new Dictionary<string, object>();
+
+		for( int i = 0; i < dictionary.Count; ++i )
+		{
+			KeyValuePair<string, Grid> pair = dictionary.ElementAt( i );
+			string key = pair.Key;
+			object value = pair.Value.Get( x, y );
+
+			intersection.Add( key, value );
+		}
+
+		return intersection;
 	}
 }

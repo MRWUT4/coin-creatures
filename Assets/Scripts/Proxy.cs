@@ -15,9 +15,7 @@ public class Proxy : GameObjectProxy
 	public GameObject[] MonsterList;
 	public GameObject Coin;
 
-
 	public GridStack GameGridStack;
-
 	public Names Names = new Names();
 
 }

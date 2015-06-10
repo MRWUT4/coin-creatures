@@ -1,13 +1,49 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+
 
 public class CoinSelectComponent : MonoBehaviour
 {
     private State state;
     private Proxy proxy;
-    private GridStack gameGridStack;
+    private GridStack gridStack;
     private Grid coinGrid;
-    private ArrayList selectionList;
+    private List< Dictionary<string, object> > intersectionList;
+
+    /**
+     * Getter / Setter.
+     */
+    
+    private bool getIntersectionIsValid(Dictionary<string, object> intersection)
+    {   
+        bool listDoesNotContainValue = getIntersectionListContainsValue( intersection ) == null;
+
+        return listDoesNotContainValue;
+    }
+
+    private Dictionary<string,object> getIntersectionListContainsValue(Dictionary<string,object> intersection)
+    {
+        for( int i = 0; i < intersectionList.Count; ++i )
+        {
+            Dictionary<string,object> item = intersectionList[ i ];
+            
+            if( item == intersection )
+                return intersection;
+        }
+
+        return null;
+    }
+
+    private Dictionary<string, object> getIntersection(MonoBehaviour monoBehaviour)
+    {
+        GameObject coinGameObject = monoBehaviour.gameObject;
+        Point point = coinGrid.GetPositionOfObject( coinGameObject );
+        Dictionary<string, object> intersection = gridStack.GetIntersection( point.x, point.y );
+
+        return intersection;
+    }
+
 
 
     /**
@@ -30,9 +66,9 @@ public class CoinSelectComponent : MonoBehaviour
     {
         state = gameObject.GetComponent<StateInfo>().state;
         proxy = state.proxy as Proxy;
-        gameGridStack = proxy.GameGridStack;
-        coinGrid = gameGridStack.GetGrid( Names.Coin );
-        selectionList = new ArrayList();
+        gridStack = proxy.GameGridStack;
+        coinGrid = gridStack.GetGrid( Names.Coin );
+        intersectionList = new List< Dictionary<string, object> >();
     }
 
 
@@ -56,30 +92,24 @@ public class CoinSelectComponent : MonoBehaviour
 
     private void interactionObjectMouseHandler(MonoBehaviour monoBehaviour)
     {
-        object listContainsValue = Assist.ListContainsValue( selectionList, monoBehaviour );
+        Dictionary<string, object> intersection = getIntersection( monoBehaviour );
+        bool intersectionIsValid = getIntersectionIsValid( intersection );
 
-        if( listContainsValue == null )
+        if( intersectionIsValid )
         {
-            selectionList.Add( monoBehaviour );
+            intersectionList.Add( intersection );
 
-            parseSelectionListForEnd();
-            animateItemTo( monoBehaviour );
+
         }
     }
-
-
-    /** Pase selection and exit if last entry is Wrong. */
-    private void parseSelectionListForEnd()
-    {
-        
-    }
-
+    
 
     /** Animate selected item. */
-    private void animateItemTo(MonoBehaviour monoBehaviour)
+    private void animateIntersecion(Dictionary<string, object> intersection)
     {
-        Animator animator = monoBehaviour.GetComponent<Animator>();
+        GameObject coinGameObject = intersection[ Names.Coin ] as GameObject;
+        Animator coinAnimator = coinGameObject.GetComponent<Animator>();
 
-        animator.Play( Names.AnimationCoinSpinOut );
+        coinAnimator.Play( Names.AnimationCoinSpinOut );
     }
 }
