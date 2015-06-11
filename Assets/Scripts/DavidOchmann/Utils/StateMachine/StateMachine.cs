@@ -99,6 +99,7 @@ public class StateMachine
 
 		CurrentState = getStateWithID( id );
 		CurrentState.Enter();
+		// CurrentState.InvokeEnter();
 
 		InvokeEnter( CurrentState );
 	}

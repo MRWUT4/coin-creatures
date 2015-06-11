@@ -31,6 +31,7 @@ public class GameState : GameObjectState
 	/** Variables */
 	private void initVariables()
 	{
+		Debug.Log( gameObject.GetComponent<StateInfo>() );
 		state = gameObject.GetComponent<StateInfo>().state;
 		proxy = state.proxy as Proxy;
 	}
@@ -47,6 +48,8 @@ public class GameState : GameObjectState
 	/** Create game StateMachine. */
 	private void initStateMachine()
 	{
+		// TODO: Fix. Every state requires its own game object.
+
 		stateMachine = new StateMachine();
 		stateMachine.OnExit += stateMachineOnExitHandler;
 
@@ -58,10 +61,16 @@ public class GameState : GameObjectState
 
 	private void stateMachineOnExitHandler(State state)
 	{
+		Debug.Log( "stateMachineOnExitHandler " + state.id );
+
 		switch( state.id )
 		{
 			case Names.GameSetupState:
 				stateMachine.SetState( Names.CoinSelectState );
+				break;
+
+			case Names.CoinSelectState:
+				Debug.Log( "OnExit CoinSelectState");
 				break;
 		}
 	}

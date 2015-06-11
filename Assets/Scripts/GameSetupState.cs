@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class GameSetupState : GameObjectState
 {
-	private StateMachine stateMachine;
-
-
 	public GameSetupState(GameObject gameObject, Proxy proxy) : base(gameObject, proxy){}
 
 

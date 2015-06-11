@@ -11,6 +11,7 @@ public class CoinSelectComponent : MonoBehaviour
     private Grid coinGrid;
     private List< Dictionary<string, object> > intersectionList;
 
+
     /**
      * Getter / Setter.
      */
@@ -18,8 +19,20 @@ public class CoinSelectComponent : MonoBehaviour
     private bool getIntersectionIsValid(Dictionary<string, object> intersection)
     {   
         bool listDoesNotContainValue = getIntersectionListContainsValue( intersection ) == null;
-
         return listDoesNotContainValue;
+    }
+
+    private bool getIntersectionMatchesListValue(Dictionary<string, object> intersection0)
+    {
+        Dictionary<string, object> intersection1 = intersectionList[ 0 ];
+
+        GameObject gameObject0 = intersection0[ Names.Monster ] as GameObject;
+        GameObject gameObject1 = intersection1[ Names.Monster ] as GameObject;
+        
+        bool lastValueMatchesListValue = gameObject0.name == gameObject1.name;
+
+        return lastValueMatchesListValue;
+
     }
 
     private Dictionary<string,object> getIntersectionListContainsValue(Dictionary<string,object> intersection)
@@ -27,8 +40,8 @@ public class CoinSelectComponent : MonoBehaviour
         for( int i = 0; i < intersectionList.Count; ++i )
         {
             Dictionary<string,object> item = intersectionList[ i ];
-            
-            if( item == intersection )
+
+            if( item[ Names.Monster ] == intersection[ Names.Monster ] )
                 return intersection;
         }
 
@@ -53,6 +66,7 @@ public class CoinSelectComponent : MonoBehaviour
     public void Start()
     {
         initVariables();
+        iniStateEventHandler();
         initGridCoins();
     }
 
@@ -72,25 +86,53 @@ public class CoinSelectComponent : MonoBehaviour
     }
 
 
-    /** Init grid coin functions. */
-    private void initGridCoins()
+    /** State event handler. */
+    private void iniStateEventHandler()
     {
-        coinGrid.ForEveryObjectCall( setupCoin );
+        state.OnExit += stateOnExitHandler;
     }
 
-    private void setupCoin(int x, int y, object item)
+    private void stateOnExitHandler(State state)
+    {
+        initGridCoins( false );
+    }
+
+
+    /** Init grid coin functions. */
+    private void initGridCoins(bool boolean = true)
+    {
+        if( boolean )
+            coinGrid.ForEveryObjectCall( setupCoinInteraction );
+        else
+            coinGrid.ForEveryObjectCall( killCoinInteraction );
+    }
+
+    private void setupCoinInteraction(int x, int y, object item)
     {
         GameObject gameObject = item as GameObject;
         InteractionObject interactionObject = ( InteractionObject ) gameObject.GetComponent<InteractionObject>();
-
-        interactionObject.OnMouseDown -= interactionObjectMouseHandler;
-        interactionObject.OnMouseOver -= interactionObjectMouseHandler;
 
         interactionObject.OnMouseDown += interactionObjectMouseHandler;
         interactionObject.OnMouseOver += interactionObjectMouseHandler;
     }
 
+    private void killCoinInteraction(int x, int y, object item)
+    {
+        GameObject gameObject = item as GameObject;
+        InteractionObject interactionObject = ( InteractionObject ) gameObject.GetComponent<InteractionObject>();
+        
+        interactionObject.OnMouseDown -= interactionObjectMouseHandler;
+        interactionObject.OnMouseOver -= interactionObjectMouseHandler;
+    }
+
     private void interactionObjectMouseHandler(MonoBehaviour monoBehaviour)
+    {
+        validateSelectedMonoBehaviour( monoBehaviour );
+    }
+    
+
+    /** Monster validation functions. */
+    private void validateSelectedMonoBehaviour(MonoBehaviour monoBehaviour)
     {
         Dictionary<string, object> intersection = getIntersection( monoBehaviour );
         bool intersectionIsValid = getIntersectionIsValid( intersection );
@@ -99,13 +141,25 @@ public class CoinSelectComponent : MonoBehaviour
         {
             intersectionList.Add( intersection );
 
-
+            animateIntersection( intersection );
+            exitIfIntersectionDoesNotMatchColor( intersection );
         }
     }
-    
+
+    private void exitIfIntersectionDoesNotMatchColor(Dictionary<string, object> intersection)
+    {
+        bool intersectionMatcherListValue = getIntersectionMatchesListValue( intersection );
+
+        if( !intersectionMatcherListValue )
+        {
+            Debug.Log( "InvokeExit" );
+            state.InvokeExit();
+        }
+    }
+
 
     /** Animate selected item. */
-    private void animateIntersecion(Dictionary<string, object> intersection)
+    private void animateIntersection(Dictionary<string, object> intersection)
     {
         GameObject coinGameObject = intersection[ Names.Coin ] as GameObject;
         Animator coinAnimator = coinGameObject.GetComponent<Animator>();

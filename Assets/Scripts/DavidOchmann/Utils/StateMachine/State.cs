@@ -15,6 +15,14 @@ public abstract class State
 	 * Event interface.
 	 */
 
+	// public delegate void OnEnterEventHandler( State state );
+	// public event OnEnterEventHandler OnEnter;
+	
+	// public virtual void InvokeEnter() 
+	// {
+	// 	if( OnEnter != null ) OnEnter( this );
+	// }
+
 	public event OnExitEventHandler OnExit;
 	public delegate void OnExitEventHandler( State state );
 	
@@ -67,6 +75,7 @@ public class StateInfo : MonoBehaviour
 public abstract class GameObjectState : State
 {
 	public GameObject gameObject;
+	public GameObject setup;
 	
 
 	/**
@@ -98,7 +107,9 @@ public abstract class GameObjectState : State
 	/** Create gameObject for state. */
 	private void initGameObjectStateGameObject()
 	{
+		// setup = new GameObject();
 		gameObject.name = id;
+
 		// gameObject.transform.parent = ( proxy as GameObjectProxy ).Container.transform;
 	}
 
@@ -106,6 +117,8 @@ public abstract class GameObjectState : State
 	/** Add StateInfo component to gameObject. */
 	private void initGameObjectComponents()
 	{
+		// TODO: Fix gameObject handling.
+
 		StateInfo stateInfo = gameObject.AddComponent<StateInfo>();
 		stateInfo.state = this;
 	}
