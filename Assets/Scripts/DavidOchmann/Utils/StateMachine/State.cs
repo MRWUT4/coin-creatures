@@ -11,6 +11,11 @@ public abstract class State
 	public object proxy;
 
 
+	public State(object proxy)
+	{
+		this.proxy = proxy;
+	}
+
 	/**
 	 * Event interface.
 	 */
@@ -58,6 +63,7 @@ public abstract class State
 }
 
 
+
 /**
  * GameObjectState.
  */
@@ -82,7 +88,7 @@ public abstract class GameObjectState : State
 	 * Constructor.
 	 */
 
-	public GameObjectState(GameObject gameObject, GameObjectProxy proxy)
+	public GameObjectState(GameObject gameObject, GameObjectProxy proxy) : base(proxy)
 	{
 		this.gameObject = gameObject;
 		this.proxy = proxy;

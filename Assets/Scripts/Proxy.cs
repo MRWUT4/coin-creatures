@@ -14,6 +14,9 @@ public class Proxy : GameObjectProxy
 
 	public GameObject[] MonsterList;
 	public GameObject Coin;
+	
+	[HideInInspector]
+	public GameObject GameStateGameObject;
 
 	public GridStack GameGridStack;
 	public Names Names = new Names();
@@ -32,4 +35,5 @@ public class Names
 	/** game states. */
 	public const string GameSetupState = "GameSetupState";
 	public const string CoinSelectState = "CoinSelectState";
+	public const string RemoveMonsterState = "RemoveMonsterState";
 }
