@@ -32,6 +32,6 @@ public class RemoveMonsterState : State
 	/** Variables. */
 	private void initVariables()
 	{
-		Debug.Log( "initVariables" );
+		// If remove list is longer than 2 remove all except last element.
 	}
 }
