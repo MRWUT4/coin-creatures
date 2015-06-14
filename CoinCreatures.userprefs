@@ -1,8 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Tween.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/State/CoinSelectState.cs">
     <Files>
-      <File FileName="Assets/Scripts/Tween.cs" Line="14" Column="2" />
+      <File FileName="Assets/Scripts/State/CoinSelectState.cs" Line="6" Column="29" />
       <File FileName="Assets/Scripts/BoardManager.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/InteractionObject.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/Grid.cs" Line="1" Column="1" />

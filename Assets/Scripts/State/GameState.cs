@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class GameState : GameObjectState
 {
+	private new Proxy proxy;
 	private StateMachine stateMachine;
 	private State state;
-	private Proxy proxy;
 	private Names names;
 	private GameObject stateGameObject;
+	private FrameTimer frameTimer;
 
 
 	public GameState(GameObject gameObject, Proxy proxy) : base(gameObject, proxy){}
@@ -23,6 +24,12 @@ public class GameState : GameObjectState
 		initStateMachine();
 	}
 
+	public override void FixedUpdate()
+	{
+		stateMachine.FixedUpdate();
+		frameTimer.Update();
+	}
+
 
 	/**
 	 * Private interface.
@@ -35,6 +42,23 @@ public class GameState : GameObjectState
 		proxy = state.proxy as Proxy;
 
 		proxy.GameStateGameObject = gameObject;
+
+
+		frameTimer = new FrameTimer( 2, 2, frameTimerOnCompleteHandler );
+		frameTimer.Start();
+
+		// frameTimer.OnStep += frameTimerOnStepHandler;
+		// frameTimer.OnComplete += frameTimerOnCompleteHandler;
+	}
+
+	private void frameTimerOnStepHandler(FrameTimer frameTimer)
+	{
+		Debug.Log( "frameTimerOnStepHandler");
+	}
+
+	private void frameTimerOnCompleteHandler(FrameTimer frameTimer)
+	{
+		Debug.Log( "frameTimerOnCompleteHandler" );
 	}
 
 

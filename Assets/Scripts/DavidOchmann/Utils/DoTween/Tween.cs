@@ -16,14 +16,14 @@ public class Tween
 	public object Target;
 	public float Duration;
 	public Dictionary<string, object> Setup;
+	public bool hasCompleted;
+	public bool hasStarted;
 
 	private int frame = 0;
 	private float delay;
 	private String ease;
 	private MethodInfo easeMethodInfo;	
 	private object[] easeValueList = new object[]{ 0, 0, 0, 0 };
-	private bool hasStarted;
-	private bool hasCompleted;
 	private Dictionary<string, float> beginValues;
 
 

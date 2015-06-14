@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class CoinSelectState : State
 {
+    private new Proxy proxy;
     private State state;
-    private Proxy proxy;
     private GridStack gridStack;
     private Grid coinGrid;
     private List< Dictionary<string, object> > intersectionList;
@@ -62,15 +62,6 @@ public class CoinSelectState : State
 
         return intersection;
     }
-
-    private Animator getIntersectionAnimator(Dictionary<string,object> intersection, string name)
-    {
-        GameObject animatorGameObject = intersection[ name ] as GameObject;
-        Animator animator = animatorGameObject.GetComponent<Animator>();
-
-        return animator;
-    }
-
 
 
     /**
@@ -155,15 +146,18 @@ public class CoinSelectState : State
         bool intersectionMatcherListValue = getIntersectionMatchesListValue( intersection );
 
         if( !intersectionMatcherListValue )
+        {
+            proxy.IntersectionList = intersectionList;
             InvokeExit();
+        }
     }
 
 
     /** Animate selected item. */
     private void animateIntersection(Dictionary<string, object> intersection)
     {
-        Animator coinAnimator = getIntersectionAnimator( intersection, Names.Coin );
-        Animator monsterAnimator = getIntersectionAnimator( intersection, Names.Monster );
+        Animator coinAnimator = Helper.getIntersectionAnimator( intersection, Names.Coin );
+        Animator monsterAnimator = Helper.getIntersectionAnimator( intersection, Names.Monster );
 
         coinAnimator.Play( Names.AnimationCoinSpinOut );
         monsterAnimator.Play( Names.AnimationIdle );

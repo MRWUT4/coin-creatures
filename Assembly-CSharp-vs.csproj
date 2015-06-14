@@ -53,9 +53,11 @@
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\DoTween\Tween.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\StateMachine\State.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\StateMachine\StateMachine.cs" />
+     <Compile Include="Assets\Scripts\DavidOchmann\Utils\Tools\FrameTimer.cs" />
      <Compile Include="Assets\Scripts\Facade.cs" />
      <Compile Include="Assets\Scripts\Grid.cs" />
      <Compile Include="Assets\Scripts\GridStack.cs" />
+     <Compile Include="Assets\Scripts\Helper.cs" />
      <Compile Include="Assets\Scripts\InteractionObject.cs" />
      <Compile Include="Assets\Scripts\Proxy.cs" />
      <Compile Include="Assets\Scripts\State\CoinSelectState.cs" />

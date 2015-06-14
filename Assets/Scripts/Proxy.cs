@@ -14,13 +14,15 @@ public class Proxy : GameObjectProxy
 
 	public GameObject[] MonsterList;
 	public GameObject Coin;
-	
-	[HideInInspector]
-	public GameObject GameStateGameObject;
-
 	public GridStack GameGridStack;
 	public Names Names = new Names();
 
+
+	[HideInInspector]
+	public GameObject GameStateGameObject;
+
+	[HideInInspector]
+	public List< Dictionary<string, object> > IntersectionList;
 }
 
 public class Names
@@ -31,6 +33,7 @@ public class Names
 	public const string AnimationMute = "Mute";
 	public const string AnimationIdle = "Idle";
 	public const string AnimationCoinSpinOut = "CoinSpinOut";
+	public const string AnimationCoinSpinIn = "CoinSpinIn";
 
 	/** game states. */
 	public const string GameSetupState = "GameSetupState";

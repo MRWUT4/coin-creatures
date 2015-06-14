@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class GameSetupState : State
 {
+	private new Proxy proxy;
 	private State state;
-	private Proxy proxy;
 
 	private Grid monsterGrid;
 	private Grid coinGrid;
