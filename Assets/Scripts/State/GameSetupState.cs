@@ -4,6 +4,7 @@ public class GameSetupState : State
 {
 	private new Proxy proxy;
 	private State state;
+	private DoTween doTween;
 
 	private Grid monsterGrid;
 	private Grid coinGrid;
@@ -67,6 +68,11 @@ public class GameSetupState : State
 		InvokeExit();
 	}
 
+	public override void FixedUpdate()
+	{
+		doTween.Update();
+	}
+
 
 	/**
 	 * Private interface.
@@ -75,6 +81,7 @@ public class GameSetupState : State
 	/** Create Module Variables. */
 	private void initVariables()
 	{
+		doTween = new DoTween();
 		gameObject = proxy.GameStateGameObject;
 		//state = gameObject.GetComponent<StateInfo>().state;
 	}
@@ -83,7 +90,8 @@ public class GameSetupState : State
 	/** GridStack functions. */
 	private void initGridStack()
 	{
-		GridStack gridStack = new GridStack( proxy.Columns, proxy.Rows );
+		// GridStack gridStack = new GridStack( proxy.Columns, proxy.Rows );
+		GridStack gridStack = new GridStack( 1, 1 );
 		proxy.GameGridStack = gridStack;
 
 		monsterGrid = gridStack.AddGrid( Names.Monster );
@@ -108,5 +116,12 @@ public class GameSetupState : State
 
 		// var interactionObject = ( InteractionObject ) coin.GetComponent< InteractionObject >();
 		// interactionObject.OnMouseDown += coinOnMouseDownHandler;
+
+		Mutate mutate = coin.GetComponent<Mutate>();
+		mutate.alpha = .5f;
+
+		// Debug.Log( mutate );
+
+		doTween.To( mutate, 1f, new { delay = 2, y = mutate.y + 10, ease = "Back.EaseOut" } );
 	}
 }

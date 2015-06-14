@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\BoardManager.cs" />
+     <Compile Include="Assets\Scripts\DavidOchmann\Component\Interaction.cs" />
+     <Compile Include="Assets\Scripts\DavidOchmann\Component\Mutate.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\Assist\Assist.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\DoTween\DoTween.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\DoTween\Easing.cs" />
@@ -58,7 +60,6 @@
      <Compile Include="Assets\Scripts\Grid.cs" />
      <Compile Include="Assets\Scripts\GridStack.cs" />
      <Compile Include="Assets\Scripts\Helper.cs" />
-     <Compile Include="Assets\Scripts\InteractionObject.cs" />
      <Compile Include="Assets\Scripts\Proxy.cs" />
      <Compile Include="Assets\Scripts\State\CoinSelectState.cs" />
      <Compile Include="Assets\Scripts\State\GameSetupState.cs" />

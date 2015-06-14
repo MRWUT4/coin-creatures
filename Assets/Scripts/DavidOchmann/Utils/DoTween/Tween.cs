@@ -102,7 +102,7 @@ public class Tween
  		Type type = target.GetType();
 		PropertyInfo info = type.GetProperty( property );
 
-		if( info != null ) info.SetValue( property, value, null );
+		if( info != null ) info.SetValue( target, value, null );
  	}
 
 	public static bool GetIsIgnoredProperty(string property)
@@ -266,7 +266,7 @@ public class Tween
 
 			if( !GetIsIgnoredProperty( name ) )
 			{
-				object value = GetObjectFloat( Target, name );
+				object value = GetObjectValue( Target, name );
 				beginValues.Add( name, Convert.ToSingle( value ) );
 			}
 		}
@@ -281,7 +281,7 @@ public class Tween
 			for( int i = 0; i < dictionary.Count; ++i )
 			{
 				KeyValuePair<string, float> pair = dictionary.ElementAt( i );
-				SetObjectFloat( Target, pair.Key, pair.Value );
+				SetObjectValue( Target, pair.Key, pair.Value );
 			}
 		}
 

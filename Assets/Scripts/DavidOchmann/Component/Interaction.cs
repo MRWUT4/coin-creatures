@@ -1,11 +1,9 @@
 using System.Collections;
 using System;
-using UnityEngine.EventSystems;
 using UnityEngine;
 
 
-
-public class InteractionObject : MonoBehaviour 
+public class Interaction : MonoBehaviour 
 {
 	/**
 	 * Event interface.

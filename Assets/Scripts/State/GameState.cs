@@ -7,7 +7,6 @@ public class GameState : GameObjectState
 	private State state;
 	private Names names;
 	private GameObject stateGameObject;
-	private FrameTimer frameTimer;
 
 
 	public GameState(GameObject gameObject, Proxy proxy) : base(gameObject, proxy){}
@@ -27,7 +26,6 @@ public class GameState : GameObjectState
 	public override void FixedUpdate()
 	{
 		stateMachine.FixedUpdate();
-		frameTimer.Update();
 	}
 
 
@@ -40,25 +38,7 @@ public class GameState : GameObjectState
 	{
 		state = gameObject.GetComponent<StateInfo>().state;
 		proxy = state.proxy as Proxy;
-
 		proxy.GameStateGameObject = gameObject;
-
-
-		frameTimer = new FrameTimer( 2, 2, frameTimerOnCompleteHandler );
-		frameTimer.Start();
-
-		// frameTimer.OnStep += frameTimerOnStepHandler;
-		// frameTimer.OnComplete += frameTimerOnCompleteHandler;
-	}
-
-	private void frameTimerOnStepHandler(FrameTimer frameTimer)
-	{
-		Debug.Log( "frameTimerOnStepHandler");
-	}
-
-	private void frameTimerOnCompleteHandler(FrameTimer frameTimer)
-	{
-		Debug.Log( "frameTimerOnCompleteHandler" );
 	}
 
 
@@ -93,6 +73,10 @@ public class GameState : GameObjectState
 
 			case Names.CoinSelectState:
 				stateMachine.SetState( Names.RemoveMonsterState );
+				break;
+
+			case Names.RemoveMonsterState:
+				stateMachine.SetState( Names.CoinSelectState );
 				break;
 		}
 	}

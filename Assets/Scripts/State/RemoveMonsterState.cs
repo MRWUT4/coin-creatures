@@ -6,8 +6,11 @@ using UnityEngine;
 public class RemoveMonsterState : State
 {
 	private new Proxy proxy;
+	private Settings settings;
 	private DoTween doTween;
+	private FrameTimer animationFrameTimer;
 	private List< Dictionary<string, object> > intersectionList; 
+
 
 	public RemoveMonsterState(Proxy proxy) : base(proxy)
 	{
@@ -32,7 +35,9 @@ public class RemoveMonsterState : State
 	public override void Enter()
 	{
 		initVariables();
-		initAnimationBranch();
+		initDoTween();
+		initAnimationFrameTimer();
+		// initAnimationBranch();
 	}
 
 	public override void Exit()
@@ -43,6 +48,7 @@ public class RemoveMonsterState : State
 	public override void FixedUpdate()
 	{
 		doTween.Update();
+		animationFrameTimer.Update();
 	}
 
 
@@ -53,24 +59,51 @@ public class RemoveMonsterState : State
 	/** Variables. */
 	private void initVariables()
 	{
-		doTween = new DoTween();
+		settings = proxy.Settings;
 		intersectionList = proxy.IntersectionList;
-
-		// If remove list is longer than 2 remove all except last element.
 	}
 
+	private void initDoTween()
+	{
+		doTween = new DoTween();
+	}
+
+
+	/** Animation FrameTimer functions. */
+	private void initAnimationFrameTimer()
+	{
+		animationFrameTimer = new FrameTimer( settings.OpenTimeout );
+		animationFrameTimer.OnComplete += animationFrameTimerOnCompleteHandler;
+		animationFrameTimer.Start();
+	}
+
+	private void animationFrameTimerOnCompleteHandler(FrameTimer frameTimer)
+	{
+		initAnimationBranch();
+	}
+
+
+	/** Animate all items in intersetion list according to position. */
 	private void initAnimationBranch()
 	{
+		if( ListHasItemsToRemove )
+		{
+			animateLastCoinIn();
+			tweenMonstersOut();
+		}
+		else
+		{
+			animateSpinAllCoinsIn();
+			InvokeExit();
+		}
+	}
 
+	private void animateLastCoinIn()
+	{
+		Dictionary<string, object> intersection = intersectionList[ intersectionList.Count - 1 ];
 
-		// if( ListHasItemsToRemove )
-		// {
-			// animateSpinAllCoinsIn();
-		// }
-		// else
-		// {
-			// animateSpinAllCoinsIn();
-		// }
+		animateKeyOfDictionaryTo( intersection, Names.Coin, Names.AnimationCoinSpinIn );	
+		animateKeyOfDictionaryTo( intersection, Names.Monster, Names.AnimationMute );
 	}
 
 	private void animateSpinAllCoinsIn()
@@ -86,5 +119,21 @@ public class RemoveMonsterState : State
 	{
 		Animator animator = Helper.getIntersectionAnimator( intersection, key );
 		animator.Play( label );
+	}
+
+
+	/** Tween functions. */
+	private void tweenMonstersOut()
+	{
+		for( int i = 0; i < intersectionList.Count - 1; ++i )
+		{
+		    Dictionary<string, object> intersection = intersectionList[ i ];
+		    GameObject monster = intersection[ Names.Monster ] as GameObject;
+
+		    Mutate mutate = monster.GetComponent<Mutate>();
+		   	mutate.sortingLayerName = Names.Remove;
+		   	
+		    doTween.To( mutate, 1f, new { y = mutate.y + 50, ease = "Back.EaseIn" } );
+		}
 	}
 }
