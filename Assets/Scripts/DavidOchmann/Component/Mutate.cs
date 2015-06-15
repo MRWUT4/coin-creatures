@@ -3,14 +3,16 @@ using UnityEngine;
 public class Mutate : MonoBehaviour
 {
 	private Vector3 position;
-	private SpriteRenderer spriteRenderer;
+	private SpriteRenderer _spriteRenderer = null;
+
+	// private SpriteRenderer spriteRenderer;
 
 
 	/**
 	 * Override interface.
 	 */
 
-	void Start()
+	void Awake()
 	{
 		initVariables();
 	}
@@ -51,7 +53,16 @@ public class Mutate : MonoBehaviour
 	}
 
 
-	/** Sprite rendere properties. */	
+	/** Sprite rendere properties. */
+	public SpriteRenderer spriteRenderer
+	{
+		get 
+	    { 
+	    	_spriteRenderer = _spriteRenderer != null ? _spriteRenderer : gameObject.GetComponent<SpriteRenderer>();
+	        return _spriteRenderer; 
+	    }
+	}
+
 	public string sortingLayerName
 	{
 		set 
@@ -82,9 +93,10 @@ public class Mutate : MonoBehaviour
 	{
 		set
 	    { 
-	    	// Debug.Log( spriteRenderer );
-	    	// color.a = value;
-	     //    spriteRenderer.color = color; 
+	    	Color spriteRendererColor = color;
+	    
+	    	spriteRendererColor.a = value;
+	        spriteRenderer.color = spriteRendererColor; 
 	    }
 		
 		get 
@@ -100,8 +112,5 @@ public class Mutate : MonoBehaviour
 	private void initVariables()
 	{
 		position = gameObject.transform.position;
-		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-
-		// Debug.Log( spriteRenderer );
 	}
 }

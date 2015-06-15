@@ -7,6 +7,7 @@ using UnityEngine;
 public class DoTween
 {
 	public bool overwrite;
+	public bool isFactory;
 	private List<Tween> tweenList = new List<Tween>();
 	
 
@@ -73,23 +74,26 @@ public class DoTween
 
 	public Tween Add(Tween tween, bool overwrite = false)
 	{
-		if( overwrite )
+		if( !isFactory )
 		{
-			// Override if Object is identical:
-			
-			for( int i = 0; i < tweenList.Count; ++i )
+			if( overwrite )
 			{
-			    Tween item = tweenList[ i ];
-			    
-			    if( item.Target == tween.Target )
-			    {
-			    	tweenList[ i ] = tween;
-			    	return tween;
-			    }
+				// Override if Object is identical:
+				
+				for( int i = 0; i < tweenList.Count; ++i )
+				{
+				    Tween item = tweenList[ i ];
+				    
+				    if( item.Target == tween.Target )
+				    {
+				    	tweenList[ i ] = tween;
+				    	return tween;
+				    }
+				}
 			}
+			
+			tweenList.Add( tween );
 		}
-		
-		tweenList.Add( tween );
 
 		return tween;
 	}

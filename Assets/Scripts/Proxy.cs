@@ -23,11 +23,21 @@ public class Proxy : GameObjectProxy
 
 	[HideInInspector]
 	public List< Dictionary<string, object> > IntersectionList;
+
+	[HideInInspector]
+	public TweenFactory TweenFactory;
+
+
+	public Proxy()
+	{
+		TweenFactory = new TweenFactory( this.Settings.Duration, this.Settings.Delay );
+	}
 }
 
 public class Settings
 {
 	public float Duration = .6f;
+	public float Delay = .1f;
 	public float OpenTimeout = 1f;
 }
 

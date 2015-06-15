@@ -65,6 +65,7 @@
      <Compile Include="Assets\Scripts\State\GameSetupState.cs" />
      <Compile Include="Assets\Scripts\State\GameState.cs" />
      <Compile Include="Assets\Scripts\State\RemoveMonsterState.cs" />
+     <Compile Include="Assets\Scripts\TweenFactory.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

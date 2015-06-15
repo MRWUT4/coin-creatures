@@ -4,7 +4,7 @@ public class GameSetupState : State
 {
 	private new Proxy proxy;
 	private State state;
-	private DoTween doTween;
+	// private DoTween doTween;
 
 	private Grid monsterGrid;
 	private Grid coinGrid;
@@ -68,10 +68,10 @@ public class GameSetupState : State
 		InvokeExit();
 	}
 
-	public override void FixedUpdate()
-	{
-		doTween.Update();
-	}
+	// public override void FixedUpdate()
+	// {
+		// doTween.Update();
+	// }
 
 
 	/**
@@ -81,8 +81,8 @@ public class GameSetupState : State
 	/** Create Module Variables. */
 	private void initVariables()
 	{
-		doTween = new DoTween();
 		gameObject = proxy.GameStateGameObject;
+		// doTween = new DoTween();
 		//state = gameObject.GetComponent<StateInfo>().state;
 	}
 
@@ -90,8 +90,8 @@ public class GameSetupState : State
 	/** GridStack functions. */
 	private void initGridStack()
 	{
-		// GridStack gridStack = new GridStack( proxy.Columns, proxy.Rows );
-		GridStack gridStack = new GridStack( 1, 1 );
+		// GridStack gridStack = new GridStack( 1, 1 );
+		GridStack gridStack = new GridStack( proxy.Columns, proxy.Rows );
 		proxy.GameGridStack = gridStack;
 
 		monsterGrid = gridStack.AddGrid( Names.Monster );
@@ -119,9 +119,6 @@ public class GameSetupState : State
 
 		Mutate mutate = coin.GetComponent<Mutate>();
 		mutate.alpha = .5f;
-
-		// Debug.Log( mutate );
-
-		doTween.To( mutate, 1f, new { delay = 2, y = mutate.y + 10, ease = "Back.EaseOut" } );
+		// doTween.To( mutate, 1f, new { y = mutate.y + 10, alpha = 0, ease = "Back.EaseOut" } );
 	}
 }

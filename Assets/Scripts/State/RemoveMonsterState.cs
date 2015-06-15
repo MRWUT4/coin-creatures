@@ -1,15 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Reflection;
+using System.Linq;
 
 
 public class RemoveMonsterState : State
 {
 	private new Proxy proxy;
 	private Settings settings;
+	private TweenFactory tweenFactory;
 	private DoTween doTween;
 	private FrameTimer animationFrameTimer;
 	private List< Dictionary<string, object> > intersectionList; 
+	private List< Dictionary<string, object> > sortedList; 
+	private Dictionary<string, object> beginIntersection; 
 
 
 	public RemoveMonsterState(Proxy proxy) : base(proxy)
@@ -25,6 +31,12 @@ public class RemoveMonsterState : State
 	public bool ListHasItemsToRemove
 	{	
 		get { return intersectionList.Count > 2; }
+	}
+
+	public string GetIntersectionSpriteRendererType(Dictionary<string, object> intersetion)
+	{
+		String name = ( intersetion[ Names.Monster ] as GameObject ).name;
+		return name;
 	}
 
 
@@ -61,6 +73,7 @@ public class RemoveMonsterState : State
 	{
 		settings = proxy.Settings;
 		intersectionList = proxy.IntersectionList;
+		tweenFactory = proxy.TweenFactory;
 	}
 
 	private void initDoTween()
@@ -89,6 +102,7 @@ public class RemoveMonsterState : State
 		if( ListHasItemsToRemove )
 		{
 			animateLastCoinIn();
+			createSortedIntersectionList();
 			tweenMonstersOut();
 		}
 		else
@@ -122,18 +136,57 @@ public class RemoveMonsterState : State
 	}
 
 
+	/** Sort intersectionList after y. */
+	private void createSortedIntersectionList()
+	{
+		beginIntersection = intersectionList[ 0 ];
+		sortedList = new List< Dictionary<string, object> >( intersectionList );
+
+		sortedList.Sort( delegate(Dictionary<string, object> a, Dictionary<string, object> b)
+        {
+        	Mutate mutateA = ( a[ Names.Monster ] as GameObject ).GetComponent<Mutate>();
+        	Mutate mutateB = ( b[ Names.Monster ] as GameObject ).GetComponent<Mutate>();
+
+        	if( mutateA.y > mutateB.y )
+        		return -1;
+        	else
+        	if( mutateA.y < mutateB.y )
+        		return 1;
+        	else
+        		return 0;
+        });
+	}
+
+
 	/** Tween functions. */
 	private void tweenMonstersOut()
 	{
-		for( int i = 0; i < intersectionList.Count - 1; ++i )
-		{
-		    Dictionary<string, object> intersection = intersectionList[ i ];
-		    GameObject monster = intersection[ Names.Monster ] as GameObject;
+		string nameA = GetIntersectionSpriteRendererType( beginIntersection );
+		int index = 0;
 
-		    Mutate mutate = monster.GetComponent<Mutate>();
-		   	mutate.sortingLayerName = Names.Remove;
-		   	
-		    doTween.To( mutate, 1f, new { y = mutate.y + 50, ease = "Back.EaseIn" } );
+		for( int i = 0; i < sortedList.Count; ++i )
+		{
+		    Dictionary<string, object> intersection = sortedList[ i ];
+			string nameB = GetIntersectionSpriteRendererType( intersection );
+
+			if( nameA == nameB )
+			{
+			   	index++;
+
+			    GameObject monster = intersection[ Names.Monster ] as GameObject;
+			    Mutate mutate = monster.GetComponent<Mutate>();
+			   	mutate.sortingLayerName = Names.Remove;
+			    
+			   	Tween tween = doTween.Add( tweenFactory.GetBackAlphaOut( mutate, index ) );
+
+			   	if( index == sortedList.Count - 1 )
+			   		tween.OnComplete += tweenOnCompleteHandler;
+		   	}
 		}
+	}
+
+	private void tweenOnCompleteHandler(Tween tween)
+	{
+		InvokeExit();
 	}
 }
