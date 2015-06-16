@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\BoardManager.cs" />
+     <Compile Include="Assets\Scripts\ClearGridValuesState.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Component\Interaction.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Component\Mutate.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\Assist\Assist.cs" />

@@ -97,6 +97,8 @@ public class GameSetupState : State
 		monsterGrid = gridStack.AddGrid( Names.Monster );
 		monsterGrid.ForEveryObjectCall( setupMonsterGridValues );
 
+		Debug.Log( monsterGrid.ToTagNameString() );
+
 		coinGrid = gridStack.AddGrid( Names.Coin );
 		coinGrid.ForEveryObjectCall( setupCoinGridValues );
 	}

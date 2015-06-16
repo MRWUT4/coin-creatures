@@ -92,7 +92,15 @@ public class RemoveMonsterState : State
 
 	private void animationFrameTimerOnCompleteHandler(FrameTimer frameTimer)
 	{
+		initProxyIntersectionListValues();
 		initAnimationBranch();
+	}
+
+
+	/** Push intersectionList values to Proxy. */
+	private void initProxyIntersectionListValues()
+	{
+		proxy.IntersectionList = ListHasItemsToRemove ? intersectionList :null;
 	}
 
 

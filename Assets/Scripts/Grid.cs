@@ -26,7 +26,6 @@ public class Grid
 	public int width;
 	public int height;
 	private ArrayList listY;
-	private ArrayList listX;
 
 
 	public Grid(int width, int height)
@@ -38,9 +37,47 @@ public class Grid
 	}
 
 
-	/*
+
+	/**
+	 * Override interface.
+	 */
+
+	public string ToTagNameString()
+	{
+		string value = "";
+
+		for( int y = listY.Count - 1; y >= 0; --y )
+		{
+		    ArrayList listX = listY[ y ] as ArrayList;
+
+		    for( int x = 0; x < listX.Count; ++x )
+		    {
+		        GameObject gameObject = listX[ x ] as GameObject;
+		        
+		        if( gameObject == null)
+		        	value += "0";
+		        else
+		        	value += gameObject.tag;
+
+		        if( x < listX.Count - 1 )
+		        	value += ", ";
+		    }
+
+		    value += "\n";
+		}
+
+		return value;
+	}
+
+
+	/**
 	 * Public interface
 	 */
+
+	public void Set(Point point, object value)
+	{
+		Set( point.x, point.y, value );
+	}
 
 	public void Set(int x, int y, object value)
 	{
@@ -84,7 +121,7 @@ public class Grid
 	}
 
 
-	/*
+	/**
 	 * Private interface.
 	 */
 

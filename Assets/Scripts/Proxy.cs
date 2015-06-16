@@ -47,6 +47,7 @@ public class Names
 	public const string Coin = "Coin";
 	public const string Remove = "Remove";
 
+	/** animation lables. */
 	public const string AnimationMute = "Mute";
 	public const string AnimationIdle = "Idle";
 	public const string AnimationCoinSpinOut = "CoinSpinOut";
@@ -56,4 +57,5 @@ public class Names
 	public const string GameSetupState = "GameSetupState";
 	public const string CoinSelectState = "CoinSelectState";
 	public const string RemoveMonsterState = "RemoveMonsterState";
+	public const string ClearGridValuesState = "ClearGridValuesState";
 }

@@ -104,20 +104,26 @@ public class CoinSelectState : State
 
     private void setupCoinInteraction(int x, int y, object item)
     {
-        GameObject gameObject = item as GameObject;
-        Interaction interaction = ( Interaction ) gameObject.GetComponent<Interaction>();
+        if( item != null )
+        {
+            GameObject gameObject = item as GameObject;
+            Interaction interaction = ( Interaction ) gameObject.GetComponent<Interaction>();
 
-        interaction.OnMouseDown += interactionMouseHandler;
-        interaction.OnMouseOver += interactionMouseHandler;
+            interaction.OnMouseDown += interactionMouseHandler;
+            interaction.OnMouseOver += interactionMouseHandler;
+        }
     }
 
     private void killCoinInteraction(int x, int y, object item)
     {
-        GameObject gameObject = item as GameObject;
-        Interaction interaction = ( Interaction ) gameObject.GetComponent<Interaction>();
-        
-        interaction.OnMouseDown -= interactionMouseHandler;
-        interaction.OnMouseOver -= interactionMouseHandler;
+        if( item != null )
+        {
+            GameObject gameObject = item as GameObject;
+            Interaction interaction = ( Interaction ) gameObject.GetComponent<Interaction>();
+            
+            interaction.OnMouseDown -= interactionMouseHandler;
+            interaction.OnMouseOver -= interactionMouseHandler;
+        }
     }
 
     private void interactionMouseHandler(MonoBehaviour monoBehaviour)
