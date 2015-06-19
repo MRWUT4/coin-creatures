@@ -63,6 +63,7 @@
      <Compile Include="Assets\Scripts\Helper.cs" />
      <Compile Include="Assets\Scripts\Proxy.cs" />
      <Compile Include="Assets\Scripts\State\CoinSelectState.cs" />
+     <Compile Include="Assets\Scripts\State\CollapseGridState.cs" />
      <Compile Include="Assets\Scripts\State\GameSetupState.cs" />
      <Compile Include="Assets\Scripts\State\GameState.cs" />
      <Compile Include="Assets\Scripts\State\RemoveMonsterState.cs" />

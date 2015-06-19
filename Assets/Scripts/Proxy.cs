@@ -58,4 +58,5 @@ public class Names
 	public const string CoinSelectState = "CoinSelectState";
 	public const string RemoveMonsterState = "RemoveMonsterState";
 	public const string ClearGridValuesState = "ClearGridValuesState";
+	public const string CollapseGridState = "CollapseGridState";
 }

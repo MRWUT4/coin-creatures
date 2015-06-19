@@ -8,7 +8,7 @@ public class GridStack
 	public int width;
 	public int height;
 
-	private Dictionary<string, Grid> dictionary = new Dictionary<string, Grid>();
+	public Dictionary<string, Grid> dictionary = new Dictionary<string, Grid>();
 
 	public GridStack(int width, int height)
 	{

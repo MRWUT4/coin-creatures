@@ -60,6 +60,7 @@ public class GameState : GameObjectState
 		stateMachine.AddState( Names.CoinSelectState, new CoinSelectState( proxy ) );
 		stateMachine.AddState( Names.RemoveMonsterState, new RemoveMonsterState( proxy ) );
 		stateMachine.AddState( Names.ClearGridValuesState, new ClearGridValuesState( proxy ) );
+		stateMachine.AddState( Names.CollapseGridState, new CollapseGridState( proxy ) );
 		
 		stateMachine.SetState( Names.GameSetupState );
 	}
@@ -81,6 +82,10 @@ public class GameState : GameObjectState
 				break;
 
 			case Names.ClearGridValuesState:
+				stateMachine.SetState( Names.CollapseGridState );
+				break;
+
+			case Names.CollapseGridState:
 				stateMachine.SetState( Names.CoinSelectState );
 				break;
 		}

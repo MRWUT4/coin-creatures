@@ -27,10 +27,7 @@ public class ClearGridValuesState : State
 		InvokeExit();
 	}
 
-	public override void Exit()
-	{
-	
-	}
+	public override void Exit(){}
 
 
 	/**
@@ -62,8 +59,6 @@ public class ClearGridValuesState : State
 			     	Point point = grid.GetPositionOfObject( pair.Value );
 
 			     	grid.Set( point, null );
-			     	
-			     	// Debug.Log( grid.ToString() );
 			    }
 			}
 		}
