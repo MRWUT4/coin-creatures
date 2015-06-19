@@ -69,7 +69,8 @@ public class CollapseGridState : State
 
 			if( compareValue == null )
 			{
-				Debug.Log( positionValue.tag + " " + x + " " + y );
+
+				Debug.Log( positionValue + " " + x + " " + y );
 				
 			}
 

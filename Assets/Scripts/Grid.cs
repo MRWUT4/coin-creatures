@@ -89,9 +89,19 @@ public class Grid
 
 	public object Get(int x, int y)
 	{
-		// TODO: Add position overflow handling.
+		object value = null;
+		bool yIsInRange = y >= 0 && y <= listY.Count - 1;
 
-		return ( listY[ y ] as ArrayList )[ x ];
+		if( yIsInRange )
+		{
+			ArrayList listX = listY[ y ] as ArrayList;
+			bool xIsInRange = x >= 0 && x <= listX.Count - 1;
+
+			if( xIsInRange )
+				value = listX[ x ];
+		}
+
+		return value;
 	}
 
 	public void ForEveryObjectCall(Action<int, int, object> callback)
