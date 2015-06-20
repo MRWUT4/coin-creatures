@@ -49,6 +49,7 @@ public class RemoveMonsterState : State
 		initVariables();
 		initDoTween();
 		initAnimationFrameTimer();
+		initZeroIntersecionListCheck();
 		// initAnimationBranch();
 	}
 
@@ -87,13 +88,22 @@ public class RemoveMonsterState : State
 	{
 		animationFrameTimer = new FrameTimer( settings.OpenTimeout );
 		animationFrameTimer.OnComplete += animationFrameTimerOnCompleteHandler;
-		animationFrameTimer.Start();
 	}
 
 	private void animationFrameTimerOnCompleteHandler(FrameTimer frameTimer)
 	{
 		initProxyIntersectionListValues();
 		initAnimationBranch();
+	}
+
+
+	/** Check if intersectionList count is 0. */
+	private void initZeroIntersecionListCheck()
+	{
+		if( intersectionList != null && intersectionList.Count > 0 )
+			animationFrameTimer.Start();
+		else
+			InvokeExit();
 	}
 
 

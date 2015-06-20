@@ -1,14 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CollapseGridState : State
+public class MoveItemsState : State
 {
 	private new Proxy proxy;
+	private DoTween doTween;
 	private GridStack gridStack;
+	private TweenFactory tweenFactory;
 
-	public CollapseGridState(Proxy proxy) : base(proxy)
+	public MoveItemsState(Proxy proxy) : base(proxy)
 	{
 		this.proxy = proxy;
 	}
@@ -22,12 +23,16 @@ public class CollapseGridState : State
 	{
 		initVariables();
 		initGridStackParsing();
-		InvokeExit();
 	}
 
 	public override void Exit()
 	{
 	
+	}
+
+	public override void FixedUpdate()
+	{
+		doTween.Update();
 	}
 
 
@@ -38,7 +43,9 @@ public class CollapseGridState : State
 	/** Variables. */
 	private void initVariables()
 	{
+		doTween = new DoTween();
 		gridStack = proxy.GameGridStack;
+		tweenFactory = proxy.TweenFactory;
 	}
 
 
@@ -61,25 +68,39 @@ public class CollapseGridState : State
 
 	private void parseGrid(Grid grid)
 	{
-		int numMoves = 0;
+		List<Tween> tweenList = new List<Tween>();
 
 		grid.ForEveryObjectCall( delegate( int x, int y, object value )
 		{
-			GameObject positionValue = value as GameObject;
-			GameObject compareValue = grid.Get( x, y + 1 ) as GameObject;
+			GameObject gameObject = value as GameObject;
 
-			if( positionValue == null && compareValue != null )
-			{			
-				grid.Set( x, y + 1, null );
-				grid.Set( x, y, compareValue );
+			if( gameObject != null )
+			{
+				Mutate mutate = gameObject.GetComponent<Mutate>();
+				int posY = y * proxy.Distance;
+				bool hasMoved = posY != mutate.y;
 
-				numMoves++;
+				if( hasMoved )
+				{
+					tweenList.Add( tweenFactory.GetBounceYOut( mutate, posY ) );
+				}
 			}
 		});
+		
 
-		// Debug.Log( numMoves + " " + grid.ToTagNameString() );
+		if( tweenList.Count > 0 )
+		{
+			Tween tween = tweenList[ tweenList.Count - 1 ];
+			tween.OnComplete += tweenOnCompleteHandler;
+			
+			doTween.Add( tweenList );	
+		}
+		else
+			tweenOnCompleteHandler( null );
+	}
 
-		if( numMoves > 0 )
-			parseGrid( grid );
+	private void tweenOnCompleteHandler(Tween tween)
+	{
+		InvokeExit();
 	}
 }

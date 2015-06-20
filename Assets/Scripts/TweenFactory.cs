@@ -29,6 +29,16 @@ public class TweenFactory
 		});
 	}
 
+	public Tween GetBounceYOut(Mutate target, float y)
+	{
+		return doTween.To( target, duration, new 
+		{ 
+			// delay = index * delay, 
+			y = y, 
+			ease = "Bounce.EaseOut" 
+		});
+	}
+
 
 	/**
 	 * Private interface.

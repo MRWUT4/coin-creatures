@@ -61,6 +61,7 @@
      <Compile Include="Assets\Scripts\Grid.cs" />
      <Compile Include="Assets\Scripts\GridStack.cs" />
      <Compile Include="Assets\Scripts\Helper.cs" />
+     <Compile Include="Assets\Scripts\MoveItemsState.cs" />
      <Compile Include="Assets\Scripts\Proxy.cs" />
      <Compile Include="Assets\Scripts\State\CoinSelectState.cs" />
      <Compile Include="Assets\Scripts\State\CollapseGridState.cs" />

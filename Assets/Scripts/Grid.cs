@@ -37,7 +37,6 @@ public class Grid
 	}
 
 
-
 	/**
 	 * Override interface.
 	 */
@@ -81,27 +80,21 @@ public class Grid
 
 	public void Set(int x, int y, object value)
 	{
-		x = x % width;
-		y = y % height;
-
-		( listY[ y ] as ArrayList )[ x ] = value;
+		if( PositionIsInBounds( x, y ) )
+			( listY[ y ] as ArrayList )[ x ] = value;
 	}
 
 	public object Get(int x, int y)
 	{
-		object value = null;
-		bool yIsInRange = y >= 0 && y <= listY.Count - 1;
+		if( PositionIsInBounds( x, y ) )
+			return ( listY[ y ] as ArrayList )[ x ];
+		else
+			return null;
+	}
 
-		if( yIsInRange )
-		{
-			ArrayList listX = listY[ y ] as ArrayList;
-			bool xIsInRange = x >= 0 && x <= listX.Count - 1;
-
-			if( xIsInRange )
-				value = listX[ x ];
-		}
-
-		return value;
+	public bool PositionIsInBounds(int x, int y)
+	{
+		return x >= 0 && x < width && y >= 0 && y < height;
 	}
 
 	public void ForEveryObjectCall(Action<int, int, object> callback)

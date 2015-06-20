@@ -9,7 +9,7 @@ using UnityEngine;
 public class Proxy : GameObjectProxy
 {
 	public int Columns = 6;
-	public int Rows = 8;
+	public int Rows = 2;
 	public int Distance = 4;
 
 	public GameObject[] MonsterList;
@@ -23,6 +23,7 @@ public class Proxy : GameObjectProxy
 
 	[HideInInspector]
 	public List< Dictionary<string, object> > IntersectionList;
+	public List< GameObject > MovedList;
 
 	[HideInInspector]
 	public TweenFactory TweenFactory;
@@ -59,4 +60,5 @@ public class Names
 	public const string RemoveMonsterState = "RemoveMonsterState";
 	public const string ClearGridValuesState = "ClearGridValuesState";
 	public const string CollapseGridState = "CollapseGridState";
+	public const string MoveItemsState = "MoveItemsState";
 }
