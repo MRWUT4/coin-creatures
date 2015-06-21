@@ -34,7 +34,8 @@ public class TweenFactory
 		return doTween.To( target, duration, new 
 		{ 
 			// delay = index * delay, 
-			y = y, 
+			y = y,
+			alpha = 1,
 			ease = "Bounce.EaseOut" 
 		});
 	}

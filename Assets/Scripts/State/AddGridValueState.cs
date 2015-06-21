@@ -31,8 +31,11 @@ public class AddGridValueState : State
 
 	public GameObject GetGameObjectCloneAt(GameObject original, int x, int y)
 	{
-		GameObject clone = (GameObject) GameObject.Instantiate( original, GetPosition(x, y), Quaternion.identity );
+		GameObject clone = (GameObject) GameObject.Instantiate( original, GetPosition(x, y + 1), Quaternion.identity );
 		clone.transform.parent = gameObject.transform;
+
+		// Mutate mutate = gameObject.GetComponent<Mutate>();
+		// mutate.alpha = .5f;
 
 		return clone;
 	}
@@ -54,7 +57,8 @@ public class AddGridValueState : State
 	/** Coin. */
 	public GameObject GetCoinInstance(int x, int y)
 	{
-		return GetGameObjectCloneAt( proxy.Coin, x, y );
+		GameObject gameObject = GetGameObjectCloneAt( proxy.Coin, x, y );
+		return gameObject;
 	}
 
 
@@ -131,10 +135,15 @@ public class AddGridValueState : State
 	/** GridStack functions. */
 	private void initGridStack()
 	{
-		// addGameObjectToTopRows( GetRandomMonsterInstance, monsterGrid, 1 );
+		int amount = monsterGrid.NumValues == 0 ? proxy.Rows : proxy.AddRows;
 
-		monsterGrid.ForEveryObjectCall( setupMonsterGridValues );
-		coinGrid.ForEveryObjectCall( setupCoinGridValues );
+		addGameObjectToTopRows( GetRandomMonsterInstance, monsterGrid, amount );
+		addGameObjectToTopRows( GetCoinInstance, coinGrid, amount );
+
+		Debug.Log( monsterGrid.ToTagNameString() );
+
+		// monsterGrid.ForEveryObjectCall( setupMonsterGridValues );
+		// coinGrid.ForEveryObjectCall( setupCoinGridValues );
 	}
 
 	private void addGameObjectToTopRows(GetGameObjectDelegate getGameObject, Grid grid, int amount)
@@ -142,49 +151,46 @@ public class AddGridValueState : State
 		ArrayList listY = grid.listY;
 		int gridWith = grid.width;
 
-		// Debug.Log( xLength );
-
 		for( int x = 0; x < gridWith; ++x )
 		{
+			int numSet = 0;
+
 		    for( int y = 0; y < listY.Count; ++y )
 		    {
 		        object value = ( listY[ y ] as ArrayList )[ x ];
 		        
-		        Debug.Log( x + " " + y + " " + value );
+		        if( value == null )
+		        {
+		        	numSet++;
+		        	
+		        	GameObject gameObject = getGameObject( x , y );
+		        	grid.Set( x, y, gameObject );
+
+				    if( numSet >= amount )
+				    	break;
+				}
 		    }
 		}
-
-
-		// for( int y = 0; y < listY.Count; ++y )
-		// {
-		//     ArrayList listX = listY[ y ] as ArrayList;
-		
-		//     for( int x = 0; x < listX.Count; ++x )
-		//     {
-		//         object value = listX[ x ] as object;
-		
-		//     }
-		// }
 	}
 
-	private void setupMonsterGridValues(int x, int y, object value)
-	{
-		var monster = GetRandomMonsterInstance( x, y );
-		monsterGrid.Set( x, y, monster ); 
-	}
+	// private void setupMonsterGridValues(int x, int y, object value)
+	// {
+	// 	var monster = GetRandomMonsterInstance( x, y );
+	// 	monsterGrid.Set( x, y, monster ); 
+	// }
 
 
-	/** Setup Coins */
-	private void setupCoinGridValues(int x, int y, object value)
-	{
-		var coin = GetCoinInstance( x, y );
-		coinGrid.Set( x, y, coin );
+	// /** Setup Coins */
+	// private void setupCoinGridValues(int x, int y, object value)
+	// {
+	// 	var coin = GetCoinInstance( x, y );
+	// 	coinGrid.Set( x, y, coin );
 
-		// var interactionObject = ( InteractionObject ) coin.GetComponent< InteractionObject >();
-		// interactionObject.OnMouseDown += coinOnMouseDownHandler;
+	// 	// var interactionObject = ( InteractionObject ) coin.GetComponent< InteractionObject >();
+	// 	// interactionObject.OnMouseDown += coinOnMouseDownHandler;
 
-		Mutate mutate = coin.GetComponent<Mutate>();
-		mutate.alpha = .5f;
-		// doTween.To( mutate, 1f, new { y = mutate.y + 10, alpha = 0, ease = "Back.EaseOut" } );
-	}
+	// 	Mutate mutate = coin.GetComponent<Mutate>();
+	// 	mutate.alpha = .5f;
+	// 	// doTween.To( mutate, 1f, new { y = mutate.y + 10, alpha = 0, ease = "Back.EaseOut" } );
+	// }
 }

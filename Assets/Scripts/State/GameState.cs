@@ -92,9 +92,9 @@ public class GameState : GameObjectState
 	{
 		switch( state.id )
 		{
-			case Names.AddGridValueState:
-				// stateMachine.SetState( Names.RemoveMonsterState );
-				break;
+			// case Names.AddGridValueState:
+			// 	stateMachine.SetState( Names.RemoveMonsterState );
+			// 	break;
 
 
 			case Names.RemoveMonsterState:
@@ -106,6 +106,10 @@ public class GameState : GameObjectState
 				break;
 
 			case Names.CollapseGridState:
+				stateMachine.SetState( Names.AddGridValueState );
+				break;
+
+			case Names.AddGridValueState:
 				stateMachine.SetState( Names.MoveItemsState );
 				break;
 
@@ -124,7 +128,9 @@ public class GameState : GameObjectState
 		switch( state.id )
 		{
 			case Names.RowTimerState:
-				Debug.Log( state.id + " " + message );
+				
+				// proxy.Rows = 1;
+
 
 				break;
 		}

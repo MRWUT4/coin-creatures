@@ -38,6 +38,27 @@ public class Grid
 
 
 	/**
+	 * Getter / Setter.
+	 */
+
+	public int NumValues
+	{		
+		get 
+	    { 
+	    	int amount = 0;
+
+	        ForEveryObjectCall( delegate(int x, int y, object value)
+	        {
+	        	if( value != null )
+	        		amount++;
+	        });
+
+	        return amount;
+	    }
+	}
+
+
+	/**
 	 * Override interface.
 	 */
 
