@@ -22,12 +22,12 @@ public class StateMachine
 		if( OnExit != null ) OnExit( state );
 	}
 
-	public delegate void OnMessageEventHandler( State state );
+	public delegate void OnMessageEventHandler( State state, string message );
 	public event OnMessageEventHandler OnMessage;
 	
-	protected virtual void InvokeMessage(State state) 
+	protected virtual void InvokeMessage(State state, string message) 
 	{
-		if( OnMessage != null ) OnMessage( state );
+		if( OnMessage != null ) OnMessage( state, message );
 	}
 
 	public delegate void OnEnterEventHandler( State enter );
@@ -61,6 +61,34 @@ public class StateMachine
 		get { return previousStateList[ previousStateList.Count - 1 ] as State; }
 	}
 
+	public State GetState(string id)
+	{
+		for( int i = 0; i < stateList.Count; ++i )
+		{
+			State state = stateList[ i ] as State;
+
+			if( state.id == id )
+				return state;
+		}
+		
+		return null;
+	}
+
+	public void SetState(string id)
+	{
+		if( CurrentState != null )
+		{
+			CurrentState.Exit();
+			previousStateList.Add( CurrentState );
+		}
+
+		CurrentState = GetState( id );
+		CurrentState.Enter();
+		// CurrentState.InvokeEnter();
+
+		InvokeEnter( CurrentState );
+	}
+
 
 	/**
 	 * Public interface.
@@ -89,21 +117,6 @@ public class StateMachine
 		stateList.Add( state );
 	}
 
-	public void SetState(string id)
-	{
-		if( CurrentState != null )
-		{
-			CurrentState.Exit();
-			previousStateList.Add( CurrentState );
-		}
-
-		CurrentState = getStateWithID( id );
-		CurrentState.Enter();
-		// CurrentState.InvokeEnter();
-
-		InvokeEnter( CurrentState );
-	}
-
 	public State KillPreviousState()
 	{
 		if( previousStateList.Count > 1 )
@@ -129,19 +142,6 @@ public class StateMachine
 		OnKill( state );
 	}
 
-	public State getStateWithID(string id)
-	{
-		for( int i = 0; i < stateList.Count; ++i )
-		{
-			State state = stateList[ i ] as State;
-
-			if( state.id == id )
-				return state;
-		}
-		
-		return null;
-	}
-
 
 	/**
 	 * Private interface.
@@ -152,8 +152,8 @@ public class StateMachine
 		InvokeExit( state );	
 	}
 
-	private void stateOnMessageHandler(State state)
+	private void stateOnMessageHandler(State state, string message)
 	{
-		InvokeMessage( state );	
+		InvokeMessage( state, message );	
 	}
 }

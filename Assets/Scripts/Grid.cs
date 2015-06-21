@@ -25,7 +25,7 @@ public class Grid
 {
 	public int width;
 	public int height;
-	private ArrayList listY;
+	public ArrayList listY;
 
 
 	public Grid(int width, int height)

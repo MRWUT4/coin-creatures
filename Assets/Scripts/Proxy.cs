@@ -11,6 +11,7 @@ public class Proxy : GameObjectProxy
 	public int Columns = 6;
 	public int Rows = 2;
 	public int Distance = 4;
+	public int NewRowTimeout = 20;
 
 	public GameObject[] MonsterList;
 	public GameObject Coin;
@@ -55,10 +56,12 @@ public class Names
 	public const string AnimationCoinSpinIn = "CoinSpinIn";
 
 	/** game states. */
-	public const string GameSetupState = "GameSetupState";
+	public const string AddGridValueState = "AddGridValueState";
 	public const string CoinSelectState = "CoinSelectState";
 	public const string RemoveMonsterState = "RemoveMonsterState";
 	public const string ClearGridValuesState = "ClearGridValuesState";
 	public const string CollapseGridState = "CollapseGridState";
 	public const string MoveItemsState = "MoveItemsState";
+	public const string RowTimerState = "RowTimerState";
+	public const string AddTopRowState = "AddTopRowState";
 }

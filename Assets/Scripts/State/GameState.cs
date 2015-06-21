@@ -12,6 +12,23 @@ public class GameState : GameObjectState
 	public GameState(GameObject gameObject, Proxy proxy) : base(gameObject, proxy){}
 
 
+
+	/**
+	 * Getter / Setter
+	 */
+
+	private State _rowTimerState;
+
+	public State rowTimerState
+	{		
+		get 
+	    { 
+	    	_rowTimerState = _rowTimerState != null ? _rowTimerState : stateMachine.GetState( Names.RowTimerState );
+	        return _rowTimerState; 
+	    }
+	}
+
+
 	/**
 	 * Public interface.
 	 */
@@ -26,6 +43,7 @@ public class GameState : GameObjectState
 	public override void FixedUpdate()
 	{
 		stateMachine.FixedUpdate();
+		rowTimerState.FixedUpdate();
 	}
 
 
@@ -55,8 +73,10 @@ public class GameState : GameObjectState
 	{
 		stateMachine = new StateMachine();
 		stateMachine.OnExit += stateMachineOnExitHandler;
+		stateMachine.OnMessage += stateMachineOnMessageHandler;
 
-		stateMachine.AddState( Names.GameSetupState, new GameSetupState( proxy ) );
+		stateMachine.AddState( Names.RowTimerState, new RowTimerState( proxy ) );
+		stateMachine.AddState( Names.AddGridValueState, new AddGridValueState( proxy ) );
 
 		stateMachine.AddState( Names.RemoveMonsterState, new RemoveMonsterState( proxy ) );
 		stateMachine.AddState( Names.ClearGridValuesState, new ClearGridValuesState( proxy ) );
@@ -64,15 +84,16 @@ public class GameState : GameObjectState
 		stateMachine.AddState( Names.MoveItemsState, new MoveItemsState( proxy ) );
 		stateMachine.AddState( Names.CoinSelectState, new CoinSelectState( proxy ) );
 		
-		stateMachine.SetState( Names.GameSetupState );
+		stateMachine.SetState( Names.RowTimerState );
+		stateMachine.SetState( Names.AddGridValueState );
 	}
 
 	private void stateMachineOnExitHandler(State state)
 	{
 		switch( state.id )
 		{
-			case Names.GameSetupState:
-				stateMachine.SetState( Names.RemoveMonsterState );
+			case Names.AddGridValueState:
+				// stateMachine.SetState( Names.RemoveMonsterState );
 				break;
 
 
@@ -94,6 +115,17 @@ public class GameState : GameObjectState
 
 			case Names.CoinSelectState:
 				stateMachine.SetState( Names.RemoveMonsterState );
+				break;
+		}
+	}
+
+	private void stateMachineOnMessageHandler(State state, string message)
+	{
+		switch( state.id )
+		{
+			case Names.RowTimerState:
+				Debug.Log( state.id + " " + message );
+
 				break;
 		}
 	}

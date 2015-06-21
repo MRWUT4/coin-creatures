@@ -37,11 +37,11 @@ public abstract class State
 	}
 
 	public event OnMessageEventHandler OnMessage;
-	public delegate void OnMessageEventHandler( State state );
+	public delegate void OnMessageEventHandler( State state, string message );
 	
-	public virtual void InvokeMessage() 
+	public virtual void InvokeMessage(string message = null) 
 	{
-		if( OnMessage != null ) OnMessage( this );
+		if( OnMessage != null ) OnMessage( this, message );
 	}
 
 

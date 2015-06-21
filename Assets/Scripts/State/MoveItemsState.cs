@@ -81,9 +81,7 @@ public class MoveItemsState : State
 				bool hasMoved = posY != mutate.y;
 
 				if( hasMoved )
-				{
 					tweenList.Add( tweenFactory.GetBounceYOut( mutate, posY ) );
-				}
 			}
 		});
 		

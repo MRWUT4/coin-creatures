@@ -46,8 +46,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\AddTopRowState.cs" />
      <Compile Include="Assets\Scripts\BoardManager.cs" />
-     <Compile Include="Assets\Scripts\ClearGridValuesState.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Component\Interaction.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Component\Mutate.cs" />
      <Compile Include="Assets\Scripts\DavidOchmann\Utils\Assist\Assist.cs" />
@@ -61,13 +61,15 @@
      <Compile Include="Assets\Scripts\Grid.cs" />
      <Compile Include="Assets\Scripts\GridStack.cs" />
      <Compile Include="Assets\Scripts\Helper.cs" />
-     <Compile Include="Assets\Scripts\MoveItemsState.cs" />
      <Compile Include="Assets\Scripts\Proxy.cs" />
+     <Compile Include="Assets\Scripts\State\AddGridValueState.cs" />
+     <Compile Include="Assets\Scripts\State\ClearGridValuesState.cs" />
      <Compile Include="Assets\Scripts\State\CoinSelectState.cs" />
      <Compile Include="Assets\Scripts\State\CollapseGridState.cs" />
-     <Compile Include="Assets\Scripts\State\GameSetupState.cs" />
      <Compile Include="Assets\Scripts\State\GameState.cs" />
+     <Compile Include="Assets\Scripts\State\MoveItemsState.cs" />
      <Compile Include="Assets\Scripts\State\RemoveMonsterState.cs" />
+     <Compile Include="Assets\Scripts\State\RowTimerState.cs" />
      <Compile Include="Assets\Scripts\TweenFactory.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

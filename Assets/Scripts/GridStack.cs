@@ -27,7 +27,12 @@ public class GridStack
 
 	public Grid GetGrid(string id)
 	{
-		return dictionary[ id ];
+		Grid grid = null;
+
+		if( dictionary.TryGetValue( id, out grid ) )
+			return grid;
+		else
+			return null;
 	}
 
 	public Dictionary<string, object> GetIntersection(int x, int y)

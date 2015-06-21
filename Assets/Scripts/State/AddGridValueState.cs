@@ -1,17 +1,19 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
-public class GameSetupState : State
+public class AddGridValueState : State
 {
 	private new Proxy proxy;
 	private State state;
 	// private DoTween doTween;
 
-	private Grid monsterGrid;
-	private Grid coinGrid;
 	private GameObject gameObject;
+	private delegate GameObject GetGameObjectDelegate(int x, int y);
 
 
-	public GameSetupState(Proxy proxy) : base(proxy)
+	public AddGridValueState(Proxy proxy) : base(proxy)
 	{
 		this.proxy = proxy;
 	}
@@ -56,6 +58,45 @@ public class GameSetupState : State
 	}
 
 
+	/** GridStack. */
+	public GridStack gridStack
+	{		
+		get 
+	    { 
+			if( proxy.GameGridStack == null )
+				proxy.GameGridStack = new GridStack( proxy.Columns, proxy.Rows );	
+
+	        return proxy.GameGridStack; 
+	    }
+	}
+
+	public Grid monsterGrid
+	{
+		get
+		{
+			Grid grid = gridStack.GetGrid( Names.Monster );
+
+			if( grid == null )
+				grid = gridStack.AddGrid( Names.Monster );
+
+			return grid;
+		}
+	}
+
+	public Grid coinGrid
+	{
+		get
+		{
+			Grid grid = gridStack.GetGrid( Names.Coin );
+
+			if( grid == null )
+				grid = gridStack.AddGrid( Names.Coin );
+
+			return grid;
+		}
+	}
+
+
 	/**
 	 * Override interface.
 	 */
@@ -90,17 +131,40 @@ public class GameSetupState : State
 	/** GridStack functions. */
 	private void initGridStack()
 	{
-		// GridStack gridStack = new GridStack( 1, 1 );
-		GridStack gridStack = new GridStack( proxy.Columns, proxy.Rows );
-		proxy.GameGridStack = gridStack;
+		// addGameObjectToTopRows( GetRandomMonsterInstance, monsterGrid, 1 );
 
-		monsterGrid = gridStack.AddGrid( Names.Monster );
 		monsterGrid.ForEveryObjectCall( setupMonsterGridValues );
-
-		Debug.Log( monsterGrid.ToTagNameString() );
-
-		coinGrid = gridStack.AddGrid( Names.Coin );
 		coinGrid.ForEveryObjectCall( setupCoinGridValues );
+	}
+
+	private void addGameObjectToTopRows(GetGameObjectDelegate getGameObject, Grid grid, int amount)
+	{
+		ArrayList listY = grid.listY;
+		int gridWith = grid.width;
+
+		// Debug.Log( xLength );
+
+		for( int x = 0; x < gridWith; ++x )
+		{
+		    for( int y = 0; y < listY.Count; ++y )
+		    {
+		        object value = ( listY[ y ] as ArrayList )[ x ];
+		        
+		        Debug.Log( x + " " + y + " " + value );
+		    }
+		}
+
+
+		// for( int y = 0; y < listY.Count; ++y )
+		// {
+		//     ArrayList listX = listY[ y ] as ArrayList;
+		
+		//     for( int x = 0; x < listX.Count; ++x )
+		//     {
+		//         object value = listX[ x ] as object;
+		
+		//     }
+		// }
 	}
 
 	private void setupMonsterGridValues(int x, int y, object value)
