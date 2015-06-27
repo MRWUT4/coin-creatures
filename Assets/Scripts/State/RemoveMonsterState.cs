@@ -149,7 +149,7 @@ public class RemoveMonsterState : State
 
 	private void animateKeyOfDictionaryTo(Dictionary<string, object> intersection, string key, string label)
 	{
-		Animator animator = Helper.getIntersectionAnimator( intersection, key );
+		Animator animator = Helper.GetIntersectionAnimator( intersection, key );
 		animator.Play( label );
 	}
 

@@ -9,6 +9,7 @@ public class Proxy : GameObjectProxy
 {
 	public int Columns = 6;
 	public int Rows = 8;
+	public int BeginRows = 2;
 	public int AddRows = 1;
 	public int Distance = 4;
 	public int NewRowTimeout = 20;

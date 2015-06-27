@@ -142,6 +142,7 @@ public class CoinSelectState : State
         {
             intersectionList.Add( intersection );
 
+            showIntersectionMonster( intersection );
             animateIntersection( intersection );
             exitIfIntersectionDoesNotMatchColor( intersection );
         }
@@ -160,10 +161,16 @@ public class CoinSelectState : State
 
 
     /** Animate selected item. */
+    private void showIntersectionMonster(Dictionary<string, object> intersection)
+    {
+        GameObject gameObject = Helper.GetIntersectionGameObject( intersection, Names.Monster );
+        gameObject.GetComponent<Renderer>().enabled = true;
+    }
+
     private void animateIntersection(Dictionary<string, object> intersection)
     {
-        Animator coinAnimator = Helper.getIntersectionAnimator( intersection, Names.Coin );
-        Animator monsterAnimator = Helper.getIntersectionAnimator( intersection, Names.Monster );
+        Animator coinAnimator = Helper.GetIntersectionAnimator( intersection, Names.Coin );
+        Animator monsterAnimator = Helper.GetIntersectionAnimator( intersection, Names.Monster );
 
         coinAnimator.Play( Names.AnimationCoinSpinOut );
         monsterAnimator.Play( Names.AnimationIdle );

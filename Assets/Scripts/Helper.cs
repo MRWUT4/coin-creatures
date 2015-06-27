@@ -5,10 +5,15 @@ using UnityEngine;
 
 public static class Helper
 {
-	public static Animator getIntersectionAnimator(Dictionary<string,object> intersection, string name)
+	public static GameObject GetIntersectionGameObject(Dictionary<string,object> intersection, string name)
+	{
+		return intersection[ name ] as GameObject;
+	}
+
+	public static Animator GetIntersectionAnimator(Dictionary<string,object> intersection, string name)
     {
-        GameObject animatorGameObject = intersection[ name ] as GameObject;
-        Animator animator = animatorGameObject.GetComponent<Animator>();
+        GameObject gameObject = Helper.GetIntersectionGameObject( intersection, name );
+        Animator animator = gameObject.GetComponent<Animator>();
 
         return animator;
     }

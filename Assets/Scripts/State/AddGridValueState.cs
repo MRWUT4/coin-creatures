@@ -50,7 +50,9 @@ public class AddGridValueState : State
 
 	public GameObject GetRandomMonsterInstance(int x, int y)
 	{
-		return GetGameObjectCloneAt( GetRandomMonster(), x, y );
+		GameObject gameObject = GetGameObjectCloneAt( GetRandomMonster(), x, y );
+		// gameObject.GetComponent<Renderer>().enabled = false;
+		return gameObject;
 	}
 
 
@@ -135,12 +137,10 @@ public class AddGridValueState : State
 	/** GridStack functions. */
 	private void initGridStack()
 	{
-		int amount = monsterGrid.NumValues == 0 ? proxy.Rows : proxy.AddRows;
+		int amount = monsterGrid.NumValues == 0 ? proxy.BeginRows : proxy.AddRows;
 
 		addGameObjectToTopRows( GetRandomMonsterInstance, monsterGrid, amount );
 		addGameObjectToTopRows( GetCoinInstance, coinGrid, amount );
-
-		Debug.Log( monsterGrid.ToTagNameString() );
 
 		// monsterGrid.ForEveryObjectCall( setupMonsterGridValues );
 		// coinGrid.ForEveryObjectCall( setupCoinGridValues );

@@ -92,11 +92,6 @@ public class GameState : GameObjectState
 	{
 		switch( state.id )
 		{
-			// case Names.AddGridValueState:
-			// 	stateMachine.SetState( Names.RemoveMonsterState );
-			// 	break;
-
-
 			case Names.RemoveMonsterState:
 				stateMachine.SetState( Names.ClearGridValuesState );
 				break;

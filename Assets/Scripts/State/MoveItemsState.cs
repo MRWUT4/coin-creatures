@@ -77,6 +77,10 @@ public class MoveItemsState : State
 			if( gameObject != null )
 			{
 				Mutate mutate = gameObject.GetComponent<Mutate>();
+
+				if( gameObject.name == Names.Monster )
+					gameObject.GetComponent<Renderer>().enabled = false;
+
 				int posY = y * proxy.Distance;
 				bool hasMoved = posY != mutate.y;
 
