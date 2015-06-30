@@ -77,7 +77,6 @@ public class GameState : GameObjectState
 
 		stateMachine.AddState( Names.RowTimerState, new RowTimerState( proxy ) );
 		stateMachine.AddState( Names.AddGridValueState, new AddGridValueState( proxy ) );
-
 		stateMachine.AddState( Names.RemoveMonsterState, new RemoveMonsterState( proxy ) );
 		stateMachine.AddState( Names.ClearGridValuesState, new ClearGridValuesState( proxy ) );
 		stateMachine.AddState( Names.CollapseGridState, new CollapseGridState( proxy ) );
@@ -92,19 +91,8 @@ public class GameState : GameObjectState
 	{
 		switch( state.id )
 		{
-			case Names.RemoveMonsterState:
-				stateMachine.SetState( Names.ClearGridValuesState );
-				break;
-
-			case Names.ClearGridValuesState:
-				stateMachine.SetState( Names.CollapseGridState );
-				break;
-
-			case Names.CollapseGridState:
-				stateMachine.SetState( Names.AddGridValueState );
-				break;
-
 			case Names.AddGridValueState:
+			case Names.CollapseGridState:
 				stateMachine.SetState( Names.MoveItemsState );
 				break;
 
@@ -115,6 +103,14 @@ public class GameState : GameObjectState
 			case Names.CoinSelectState:
 				stateMachine.SetState( Names.RemoveMonsterState );
 				break;
+				
+			case Names.RemoveMonsterState:
+				stateMachine.SetState( Names.ClearGridValuesState );
+				break;
+
+			case Names.ClearGridValuesState:
+				stateMachine.SetState( Names.CollapseGridState );
+				break;
 		}
 	}
 
@@ -123,10 +119,7 @@ public class GameState : GameObjectState
 		switch( state.id )
 		{
 			case Names.RowTimerState:
-				
-				// proxy.Rows = 1;
-
-
+				stateMachine.SetState( Names.AddGridValueState );
 				break;
 		}
 	}

@@ -25,11 +25,6 @@ public class MoveItemsState : State
 		initGridStackParsing();
 	}
 
-	public override void Exit()
-	{
-	
-	}
-
 	public override void FixedUpdate()
 	{
 		doTween.Update();

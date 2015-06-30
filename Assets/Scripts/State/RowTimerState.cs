@@ -46,7 +46,7 @@ public class RowTimerState : State
 	/** FrameTimer functions. */
 	private void initFrameTimer()
 	{
-		frameTimer = new FrameTimer( proxy.NewRowTimeout );
+		frameTimer = new FrameTimer( proxy.NewRowTimeout, 1 );
 		frameTimer.OnComplete += frameTimerOnCompleteHandler;
 		frameTimer.Start();
 	}

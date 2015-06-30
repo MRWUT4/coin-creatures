@@ -12,7 +12,7 @@ public class Proxy : GameObjectProxy
 	public int BeginRows = 2;
 	public int AddRows = 1;
 	public int Distance = 4;
-	public int NewRowTimeout = 20;
+	public int NewRowTimeout = 5;
 
 	public GameObject[] MonsterList;
 	public GameObject Coin;
