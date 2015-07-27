@@ -43,7 +43,7 @@ public class GameState : GameObjectState
 	public override void FixedUpdate()
 	{
 		stateMachine.FixedUpdate();
-		rowTimerState.FixedUpdate();
+		// rowTimerState.FixedUpdate();
 	}
 
 
